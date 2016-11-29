@@ -159,7 +159,7 @@
 #ifndef OPENSSL_NO_ENGINE
 # include <openssl/engine.h>
 #endif
-#include "jlog.h"
+#include "logic.h"
 
 const char *SSL_version_str = OPENSSL_VERSION_TEXT;
 
@@ -295,7 +295,8 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
 SSL *SSL_new(SSL_CTX *ctx)
 {
     SSL *s;
-    LOGD("SSL_new");
+    UINT64 startTime = nb_getSysTime();
+//     void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time);
     if (ctx == NULL) {
         SSLerr(SSL_F_SSL_NEW, SSL_R_NULL_SSL_CTX);
         return (NULL);
@@ -426,7 +427,7 @@ SSL *SSL_new(SSL_CTX *ctx)
     s->psk_client_callback = ctx->psk_client_callback;
     s->psk_server_callback = ctx->psk_server_callback;
 #endif
-
+    nb_ssl_create(ctx, s, startTime, nb_getSysTime());
     return (s);
  err:
     if (s != NULL)
@@ -562,7 +563,7 @@ void SSL_certs_clear(SSL *s)
 
 void SSL_free(SSL *s)
 {
-    LOGD("SSL_free");
+    //LOGD("SSL_free");
     int i;
 
     if (s == NULL)
@@ -703,7 +704,7 @@ BIO *SSL_get_wbio(const SSL *s)
 
 int SSL_get_fd(const SSL *s)
 {
-     LOGD("SSL_get_fd");
+//      LOGD("SSL_get_fd");
     return (SSL_get_rfd(s));
 }
 
@@ -734,7 +735,7 @@ int SSL_get_wfd(const SSL *s)
 #ifndef OPENSSL_NO_SOCK
 int SSL_set_fd(SSL *s, int fd)
 {
-    LOGD("SSL_set_fd");
+//     LOGD("SSL_set_fd");
     int ret = 0;
     BIO *bio = NULL;
 
@@ -1005,7 +1006,7 @@ int SSL_accept(SSL *s)
 
 int SSL_connect(SSL *s)
 {
-    LOGD("SSL_connect");
+//     LOGD("SSL_connect");
     if (s->handshake_func == 0)
         /* Not properly initialized yet */
         SSL_set_connect_state(s);
@@ -1020,7 +1021,7 @@ long SSL_get_default_timeout(const SSL *s)
 
 int SSL_read(SSL *s, void *buf, int num)
 {
-    LOGD("SSL_read");
+//     LOGD("SSL_read");
     if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_READ, SSL_R_UNINITIALIZED);
         return -1;
@@ -1048,7 +1049,7 @@ int SSL_peek(SSL *s, void *buf, int num)
 
 int SSL_write(SSL *s, const void *buf, int num)
 {
-    LOGD("SSL_write");
+//     LOGD("SSL_write");
     if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_WRITE, SSL_R_UNINITIALIZED);
         return -1;
@@ -2698,7 +2699,7 @@ int SSL_set_ssl_method(SSL *s, const SSL_METHOD *meth)
 
 int SSL_get_error(const SSL *s, int i)
 {
-    LOGD("SSL_get_error");
+    //LOGD("SSL_get_error");
     int reason;
     unsigned long l;
     BIO *bio;
