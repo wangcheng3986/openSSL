@@ -5,7 +5,7 @@
 DIR=	ssl
 TOP=	..
 CC=	cc
-INCLUDES= -I../crypto -I$(TOP) -I../include $(KRB5_INCLUDES) -I./vslt
+INCLUDES= -I../crypto -I$(TOP) -I../include $(KRB5_INCLUDES) -I./util/vstl
 CFLAG=-g
 MAKEFILE=	Makefile
 AR=		ar r
