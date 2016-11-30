@@ -159,9 +159,7 @@
 #ifndef OPENSSL_NO_ENGINE
 # include <openssl/engine.h>
 #endif
-//#include "logic.h"
-#include <android/log.h>
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,"yourTAGStr", __VA_ARGS__)
+#include "logic.h"
 
 const char *SSL_version_str = OPENSSL_VERSION_TEXT;
 
@@ -296,9 +294,8 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
 
 SSL *SSL_new(SSL_CTX *ctx)
 {
-    LOGD("CCCCCCCCCCCCCCCCCCCCCCCCCCCC");
     SSL *s;
-//    UINT64 startTime = nb_getSysTime();
+    UINT64 startTime = nb_getSysTime();
 //     void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time);
     if (ctx == NULL) {
         SSLerr(SSL_F_SSL_NEW, SSL_R_NULL_SSL_CTX);
