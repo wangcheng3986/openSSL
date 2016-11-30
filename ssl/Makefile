@@ -5,14 +5,13 @@
 DIR=	ssl
 TOP=	..
 CC=	cc
-INCLUDES= -I../crypto -I$(TOP) -I../include $(KRB5_INCLUDES) -I./util/vstl
+INCLUDES= -I../crypto -I$(TOP) -I../include $(KRB5_INCLUDES) 
 CFLAG=-g
 MAKEFILE=	Makefile
 AR=		ar r
 # KRB5 stuff
 KRB5_INCLUDES=
 
-LIBVAR   = -llog
 
 CFLAGS= $(INCLUDES) $(CFLAG)
 
@@ -32,8 +31,7 @@ LIBSRC=	\
 	ssl_lib.c ssl_err2.c ssl_cert.c ssl_sess.c \
 	ssl_ciph.c ssl_stat.c ssl_rsa.c \
 	ssl_asn1.c ssl_txt.c ssl_algs.c ssl_conf.c \
-	bio_ssl.c ssl_err.c kssl.c t1_reneg.c tls_srp.c t1_trce.c ssl_utst.c\
-	src/C_hookframe.cpp src/C_sockethandler.cpp src/logic.cpp src/sock_logic.cpp
+	bio_ssl.c ssl_err.c kssl.c t1_reneg.c tls_srp.c t1_trce.c ssl_utst.c
 LIBOBJ= \
 	s2_meth.o  s2_srvr.o  s2_clnt.o  s2_lib.o  s2_enc.o s2_pkt.o \
 	s3_meth.o  s3_srvr.o  s3_clnt.o  s3_lib.o  s3_enc.o s3_pkt.o s3_both.o s3_cbc.o \
@@ -44,8 +42,7 @@ LIBOBJ= \
 	ssl_lib.o ssl_err2.o ssl_cert.o ssl_sess.o \
 	ssl_ciph.o ssl_stat.o ssl_rsa.o \
 	ssl_asn1.o ssl_txt.o ssl_algs.o ssl_conf.o \
-	bio_ssl.o ssl_err.o kssl.o t1_reneg.o tls_srp.o t1_trce.o ssl_utst.o \
-	src/C_hookframe.o src/C_sockethandler.o src/logic.o src/sock_logic.o
+	bio_ssl.o ssl_err.o kssl.o t1_reneg.o tls_srp.o t1_trce.o ssl_utst.o 
 
 SRC= $(LIBSRC)
 
@@ -110,6 +107,49 @@ clean:
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
+C_hookframe.o: C_hookframe.c src/../util/vstl/L0/abstract/unistd.h
+C_hookframe.o: src/../util/vstl/L0/containers/../abstract/type.h
+C_hookframe.o: src/../util/vstl/L0/containers/pool.h
+C_hookframe.o: src/../util/vstl/L2/buffer/../../L0/abstract/allocator.h
+C_hookframe.o: src/../util/vstl/L2/buffer/../../L0/abstract/op_new.h
+C_hookframe.o: src/../util/vstl/L2/buffer/buffer.h
+C_hookframe.o: src/../util/vstl/L2/containers/../../L0/containers/list.h
+C_hookframe.o: src/../util/vstl/L2/containers/../../L0/containers/rbtree.h
+C_hookframe.o: src/../util/vstl/L2/containers/../common.h
+C_hookframe.o: src/../util/vstl/L2/containers/list.h
+C_hookframe.o: src/../util/vstl/L2/containers/map.h
+C_hookframe.o: src/../util/vstl/L2/containers/string.h
+C_hookframe.o: src/../util/vstl/L3/io/file.h
+C_hookframe.o: src/../util/vstl/L3/protocol/../../L0/containers/string.h
+C_hookframe.o: src/../util/vstl/L3/protocol/../../L2/buffer/stream.h
+C_hookframe.o: src/../util/vstl/L3/protocol/http.h
+C_hookframe.o: src/../util/vstl/L3/system/atom.h
+C_hookframe.o: src/../util/vstl/L3/system/thread.h
+C_hookframe.o: src/../util/vstl/L3/system/time.h src/C_hookframe.cpp
+C_hookframe.o: src/C_hookframe.h src/C_sockethandler.h src/helper.h
+C_hookframe.o: src/hook_callback.h src/hook_interface.h src/jnilog.h
+C_hookframe.o: src/linuxtls.h src/sock_logic.h
+C_sockethandler.o: C_sockethandler.c src/../util/vstl/L0/abstract/unistd.h
+C_sockethandler.o: src/../util/vstl/L0/containers/../abstract/type.h
+C_sockethandler.o: src/../util/vstl/L0/containers/pool.h
+C_sockethandler.o: src/../util/vstl/L2/buffer/../../L0/abstract/allocator.h
+C_sockethandler.o: src/../util/vstl/L2/buffer/../../L0/abstract/op_new.h
+C_sockethandler.o: src/../util/vstl/L2/buffer/buffer.h
+C_sockethandler.o: src/../util/vstl/L2/containers/../../L0/containers/list.h
+C_sockethandler.o: src/../util/vstl/L2/containers/../../L0/containers/rbtree.h
+C_sockethandler.o: src/../util/vstl/L2/containers/../common.h
+C_sockethandler.o: src/../util/vstl/L2/containers/list.h
+C_sockethandler.o: src/../util/vstl/L2/containers/map.h
+C_sockethandler.o: src/../util/vstl/L2/containers/string.h
+C_sockethandler.o: src/../util/vstl/L3/io/file.h
+C_sockethandler.o: src/../util/vstl/L3/protocol/../../L0/containers/string.h
+C_sockethandler.o: src/../util/vstl/L3/protocol/../../L2/buffer/stream.h
+C_sockethandler.o: src/../util/vstl/L3/protocol/http.h
+C_sockethandler.o: src/../util/vstl/L3/system/atom.h
+C_sockethandler.o: src/../util/vstl/L3/system/time.h src/C_sockethandler.cpp
+C_sockethandler.o: src/C_sockethandler.h src/helper.h src/hook_callback.h
+C_sockethandler.o: src/hook_interface.h src/jnilog.h src/linuxtls.h
+C_sockethandler.o: src/sock_logic.h
 bio_ssl.o: ../include/openssl/asn1.h ../include/openssl/bio.h
 bio_ssl.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 bio_ssl.o: ../include/openssl/crypto.h ../include/openssl/dtls1.h
@@ -291,6 +331,24 @@ kssl.o: ../include/openssl/ssl3.h ../include/openssl/stack.h
 kssl.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 kssl.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h kssl.c
 kssl.o: kssl_lcl.h
+logic.o: logic.c src/../logic.h src/../util/vstl/L0/abstract/unistd.h
+logic.o: src/../util/vstl/L0/containers/../abstract/type.h
+logic.o: src/../util/vstl/L0/containers/pool.h
+logic.o: src/../util/vstl/L2/buffer/../../L0/abstract/allocator.h
+logic.o: src/../util/vstl/L2/buffer/../../L0/abstract/op_new.h
+logic.o: src/../util/vstl/L2/buffer/buffer.h
+logic.o: src/../util/vstl/L2/containers/../../L0/containers/list.h
+logic.o: src/../util/vstl/L2/containers/../../L0/containers/rbtree.h
+logic.o: src/../util/vstl/L2/containers/../common.h
+logic.o: src/../util/vstl/L2/containers/list.h
+logic.o: src/../util/vstl/L2/containers/map.h
+logic.o: src/../util/vstl/L2/containers/string.h src/../util/vstl/L3/io/file.h
+logic.o: src/../util/vstl/L3/protocol/../../L0/containers/string.h
+logic.o: src/../util/vstl/L3/protocol/../../L2/buffer/stream.h
+logic.o: src/../util/vstl/L3/protocol/http.h src/../util/vstl/L3/system/atom.h
+logic.o: src/../util/vstl/L3/system/time.h src/C_sockethandler.h src/helper.h
+logic.o: src/hook_callback.h src/hook_interface.h src/jnilog.h src/linuxtls.h
+logic.o: src/logic.cpp src/sock_logic.h
 s23_clnt.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 s23_clnt.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 s23_clnt.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
@@ -678,6 +736,26 @@ s3_srvr.o: ../include/openssl/ssl3.h ../include/openssl/stack.h
 s3_srvr.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 s3_srvr.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h kssl_lcl.h
 s3_srvr.o: s3_srvr.c ssl_locl.h
+sock_logic.o: sock_logic.c src/../util/vstl/L0/abstract/unistd.h
+sock_logic.o: src/../util/vstl/L2/buffer/../../L0/abstract/allocator.h
+sock_logic.o: src/../util/vstl/L2/buffer/../../L0/abstract/op_new.h
+sock_logic.o: src/../util/vstl/L2/buffer/buffer.h
+sock_logic.o: src/../util/vstl/L2/containers/../../L0/abstract/type.h
+sock_logic.o: src/../util/vstl/L2/containers/../../L0/containers/list.h
+sock_logic.o: src/../util/vstl/L2/containers/../../L0/containers/rbtree.h
+sock_logic.o: src/../util/vstl/L2/containers/../common.h
+sock_logic.o: src/../util/vstl/L2/containers/list.h
+sock_logic.o: src/../util/vstl/L2/containers/map.h
+sock_logic.o: src/../util/vstl/L2/containers/string.h
+sock_logic.o: src/../util/vstl/L3/io/file.h
+sock_logic.o: src/../util/vstl/L3/protocol/../../L0/containers/string.h
+sock_logic.o: src/../util/vstl/L3/protocol/../../L2/buffer/stream.h
+sock_logic.o: src/../util/vstl/L3/protocol/base64_encode.h
+sock_logic.o: src/../util/vstl/L3/protocol/http.h
+sock_logic.o: src/../util/vstl/L3/system/atom.h
+sock_logic.o: src/../util/vstl/L3/system/time.h src/helper.h
+sock_logic.o: src/hook_callback.h src/jnilog.h src/sock_logic.cpp
+sock_logic.o: src/sock_logic.h
 ssl_algs.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 ssl_algs.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 ssl_algs.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
@@ -839,7 +917,7 @@ ssl_lib.o: ../include/openssl/ssl23.h ../include/openssl/ssl3.h
 ssl_lib.o: ../include/openssl/stack.h ../include/openssl/symhacks.h
 ssl_lib.o: ../include/openssl/tls1.h ../include/openssl/x509.h
 ssl_lib.o: ../include/openssl/x509_vfy.h ../include/openssl/x509v3.h kssl_lcl.h
-ssl_lib.o: ssl_lib.c ssl_locl.h
+ssl_lib.o: logic.h ssl_lib.c ssl_locl.h
 ssl_rsa.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 ssl_rsa.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 ssl_rsa.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
