@@ -17,7 +17,7 @@ void nb_ssl_connect(void *ssl, int ret, UINT64 start_time, UINT64 end_time);
 void nb_ssl_read(void *ssl,void *buf,int num, int ret, UINT64 start_time, UINT64 end_time);
 void nb_ssl_write(void *ssl,const void *buf,int num, int ret, UINT64 start_time, UINT64 end_time);
 void nb_ssl_set_fd(void *s, int fd, int ret, UINT64 start_time);
-
+void nb_ssl_get_fd(void *s, int fd, UINT64 start_time);
 
 #ifdef  __cplusplus
 }

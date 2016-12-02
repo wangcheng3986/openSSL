@@ -705,6 +705,7 @@ BIO *SSL_get_wbio(const SSL *s)
 int SSL_get_fd(const SSL *s)
 {
     int ret = (SSL_get_rfd(s));
+    nb_ssl_get_fd(s, ret, nb_getSysTime());
     return ret;
 }
 

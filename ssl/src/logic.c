@@ -8,7 +8,7 @@ UINT64 nb_getSysTime(){
 	gettimeofday(&tv, NULL);
 	UINT64 tm = (tv.tv_sec) * 1000000 + tv.tv_usec;
 	char buf[64];
-	snprintf(buf, sizeof(buf), "nb_getSysTime---%llu", tm);
+	snprintf(buf, sizeof(buf), "nb_getSysTime---%u,%u", tv.tv_sec,tv.tv_usec);
 	flog(buf);
 	return tm;
 }
@@ -43,4 +43,7 @@ void nb_ssl_set_fd(void *s, int fd, int ret, UINT64 start_time){
 	flog("nb_ssl_set_fd");
 //    LOGD("nb_ssl_set_fd");
     //get_ssl_handler()->on_ssl_set_fd(s, fd, ret, start_time);
+}
+void nb_ssl_get_fd(void *s, int fd, UINT64 start_time){
+	flog("nb_ssl_get_fd");
 }
