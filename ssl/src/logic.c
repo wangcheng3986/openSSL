@@ -13,9 +13,11 @@ UINT64 nb_getSysTime(){
 	return tm;
 }
 
+#include "cpluswrapper.h"
 
 void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time){
 	flog("nb_ssl_create");
+	on_ssl_create(ctx,ret,start_time,end_time);
    // get_ssl_handler()->on_ssl_create(ctx, ret, start_time, end_time);
 }
 
