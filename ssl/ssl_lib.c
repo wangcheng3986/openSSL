@@ -704,8 +704,7 @@ BIO *SSL_get_wbio(const SSL *s)
 
 int SSL_get_fd(const SSL *s)
 {
-//      LOGD("SSL_get_fd");
-    int ret = (SSL_get_rfd(s))
+    int ret = (SSL_get_rfd(s));
     return ret;
 }
 
