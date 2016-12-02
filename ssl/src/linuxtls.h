@@ -1,6 +1,7 @@
 #pragma once
 typedef void * void_pointer;
-
+#include <sys/syscall.h>
+#define gettid() syscall(__NR_gettid)
 class Tls {
     void *_threads[0x10000];
 public:

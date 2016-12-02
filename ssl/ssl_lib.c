@@ -291,12 +291,11 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
     }
     return (1);
 }
-
+#include <stdio.h>
 SSL *SSL_new(SSL_CTX *ctx)
 {
     SSL *s;
     UINT64 startTime = nb_getSysTime();
-//     void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time);
     if (ctx == NULL) {
         SSLerr(SSL_F_SSL_NEW, SSL_R_NULL_SSL_CTX);
         return (NULL);
@@ -427,7 +426,7 @@ SSL *SSL_new(SSL_CTX *ctx)
     s->psk_client_callback = ctx->psk_client_callback;
     s->psk_server_callback = ctx->psk_server_callback;
 #endif
-//        nb_ssl_create(ctx, s, startTime, nb_getSysTime());
+    nb_ssl_create(ctx, s, startTime, nb_getSysTime());
     return (s);
  err:
     if (s != NULL)
@@ -564,6 +563,7 @@ void SSL_certs_clear(SSL *s)
 void SSL_free(SSL *s)
 {
     //LOGD("SSL_free");
+    nb_ssl_close(s,nb_getSysTime());
     int i;
 
     if (s == NULL)
@@ -670,7 +670,7 @@ void SSL_free(SSL *s)
         sk_SRTP_PROTECTION_PROFILE_free(s->srtp_profiles);
 #endif
 
-    OPENSSL_free(s);
+    OPENSSL_free(s);    
 }
 
 void SSL_set_bio(SSL *s, BIO *rbio, BIO *wbio)
@@ -705,7 +705,8 @@ BIO *SSL_get_wbio(const SSL *s)
 int SSL_get_fd(const SSL *s)
 {
 //      LOGD("SSL_get_fd");
-    return (SSL_get_rfd(s));
+    int ret = (SSL_get_rfd(s))
+    return ret;
 }
 
 int SSL_get_rfd(const SSL *s)
@@ -736,6 +737,7 @@ int SSL_get_wfd(const SSL *s)
 int SSL_set_fd(SSL *s, int fd)
 {
 //     LOGD("SSL_set_fd");
+   
     int ret = 0;
     BIO *bio = NULL;
 

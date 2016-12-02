@@ -415,7 +415,7 @@ void C_sockethandler::on_write_end(int fd, ConnectionInfo *conn_info, char *buf,
 
 void C_sockethandler::on_connect_finished(int fd, ConnectionInfo *conn_info, int err_code)
 {
-    LOGD("----on_connect_finished----");
+    //LOGD("----on_connect_finished----");
     if ( conn_info->_connected ) return;
     conn_info->_connected = true;
     if ( conn_info->connect_start == 0 ) return;

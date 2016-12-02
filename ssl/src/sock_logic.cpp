@@ -375,8 +375,8 @@ void ConnectionInfo::report(int fd)
     url.append(protocol3_http::get_val(req_decoder.params(), "Host"));
 	//����uri�д�http ����https���������
 	const char *str = req_decoder.query("uri");
-	char *str1 = strstr(str, "http://");
-	char *str2 = strstr(str, "https://");
+	const char *str1 = strstr(str, "http://");
+	const char *str2 = strstr(str, "https://");
 	if (str1 || str2) {
 		url.clear();
 	}
@@ -434,8 +434,8 @@ void ConnectionInfo::on_user_close(int fd, int result_code)
         url.append(protocol3_http::get_val(req_decoder.params(), "Host"));
 		//����uri�д�http ����https���������
 		const char *str = req_decoder.query("uri");
-		char *str1 = strstr(str, "http://");
-		char *str2 = strstr(str, "https://");
+		const char *str1 = strstr(str, "http://");
+		const char *str2 = strstr(str, "https://");
 		if (str1 || str2) {
 			url.clear();
 		}
