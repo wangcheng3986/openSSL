@@ -736,8 +736,7 @@ int SSL_get_wfd(const SSL *s)
 #ifndef OPENSSL_NO_SOCK
 int SSL_set_fd(SSL *s, int fd)
 {
-//     LOGD("SSL_set_fd");
-   
+    UINT64 start_time = nb_getSysTime();
     int ret = 0;
     BIO *bio = NULL;
 
@@ -751,6 +750,7 @@ int SSL_set_fd(SSL *s, int fd)
     SSL_set_bio(s, bio, bio);
     ret = 1;
  err:
+         nb_ssl_set_fd(s,fd,ret,start_time);
     return (ret);
 }
 
@@ -1008,12 +1008,13 @@ int SSL_accept(SSL *s)
 
 int SSL_connect(SSL *s)
 {
-//     LOGD("SSL_connect");
+    UINT64 starttime = nb_getSysTime();
     if (s->handshake_func == 0)
         /* Not properly initialized yet */
         SSL_set_connect_state(s);
-
-    return (s->method->ssl_connect(s));
+    int ret = s->method->ssl_connect(s);
+    nb_ssl_connect(s,ret,starttime,nb_getSysTime());
+    return ret;
 }
 
 long SSL_get_default_timeout(const SSL *s)
@@ -1023,7 +1024,7 @@ long SSL_get_default_timeout(const SSL *s)
 
 int SSL_read(SSL *s, void *buf, int num)
 {
-//     LOGD("SSL_read");
+    UINT64 start_time = nb_getSysTime();
     if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_READ, SSL_R_UNINITIALIZED);
         return -1;
@@ -1033,7 +1034,9 @@ int SSL_read(SSL *s, void *buf, int num)
         s->rwstate = SSL_NOTHING;
         return (0);
     }
-    return (s->method->ssl_read(s, buf, num));
+    int ret = s->method->ssl_read(s, buf, num);
+    nb_ssl_read(s,buf,num, ret, start_time, nb_getSysTime());
+    return ret;
 }
 
 int SSL_peek(SSL *s, void *buf, int num)
@@ -1051,8 +1054,8 @@ int SSL_peek(SSL *s, void *buf, int num)
 
 int SSL_write(SSL *s, const void *buf, int num)
 {
-//     LOGD("SSL_write");
-    if (s->handshake_func == 0) {
+    UINT64 start_time = nb_getSysTime();
+if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_WRITE, SSL_R_UNINITIALIZED);
         return -1;
     }
@@ -1062,7 +1065,9 @@ int SSL_write(SSL *s, const void *buf, int num)
         SSLerr(SSL_F_SSL_WRITE, SSL_R_PROTOCOL_IS_SHUTDOWN);
         return (-1);
     }
-    return (s->method->ssl_write(s, buf, num));
+    int ret = s->method->ssl_write(s, buf, num);
+    nb_ssl_write(s,buf,num, ret, start_time, nb_getSysTime());
+    return (ret);
 }
 
 int SSL_shutdown(SSL *s)
