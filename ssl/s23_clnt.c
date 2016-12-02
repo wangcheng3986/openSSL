@@ -115,7 +115,7 @@
 #include <openssl/rand.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
-// #include "jlog.h"
+#include "logic.h"
 
 static const SSL_METHOD *ssl23_get_client_method(int ver);
 static int ssl23_client_hello(SSL *s);
@@ -146,7 +146,7 @@ IMPLEMENT_ssl23_meth_func(SSLv23_client_method,
 
 int ssl23_connect(SSL *s)
 {
-//     LOGD("SSL23_CONNECT");
+    UINT64 starttime = nb_getSysTime();
     BUF_MEM *buf = NULL;
     unsigned long Time = (unsigned long)time(NULL);
     void (*cb) (const SSL *ssl, int type, int val) = NULL;
@@ -257,6 +257,7 @@ int ssl23_connect(SSL *s)
         BUF_MEM_free(buf);
     if (cb != NULL)
         cb(s, SSL_CB_CONNECT_EXIT, ret);
+    nb_ssl_connect(s,ret,starttime,nb_getSysTime());
     return (ret);
 }
 

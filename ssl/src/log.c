@@ -80,11 +80,11 @@ static void write_log_file(char* filename,long max_size, const char* buffer)
                 get_local_time(now);
 		
                 fwrite(now, 1,strlen(now), fp);              
-		fwrite(buffer,1,strlen(buffer),fp);
-		fwrite("\r\n",1,strlen("\r\n"),fp);
+		        fwrite(buffer,1,strlen(buffer),fp);
+		        fwrite("\r\n",1,strlen("\r\n"),fp);
 
-		fflush(fp);
-		fclose(fp);
+		        fflush(fp);
+		        fclose(fp);
                 fp = NULL;
             }
         }
