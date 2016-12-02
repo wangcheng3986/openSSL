@@ -22,7 +22,7 @@ static void get_local_time(char* buffer)
     struct tm* timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-    sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d",
+    sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d--",
             (timeinfo->tm_year+1900), timeinfo->tm_mon, timeinfo->tm_mday,
             timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 }
@@ -60,7 +60,7 @@ static long get_file_size(char* filename)
 @param buf_size [in]: 日志内容大小
 @return 空
 */
-static void write_log_file(char* filename,long max_size, char* buffer, unsigned buf_size)
+static void write_log_file(char* filename,long max_size, const char* buffer)
 {
     if (filename != NULL && buffer != NULL)
     {
@@ -72,21 +72,26 @@ static void write_log_file(char* filename,long max_size, char* buffer, unsigned 
         }
         // 写日志
         {
-            FILE *fp;
-            fp = fopen(filename, "a+");
+            FILE *fp = fopen(filename, "a+");
             if (fp != NULL)
             {
                 char now[32];
                 memset(now, 0, sizeof(now));
                 get_local_time(now);
-                fwrite(now, strlen(now)+1, 1, fp);
-                fwrite(buffer, buf_size, 1, fp);
-                fclose(fp);
+		
+                fwrite(now, 1,strlen(now), fp);              
+		fwrite(buffer,1,strlen(buffer),fp);
+		fwrite("\r\n",1,strlen("\r\n"),fp);
+
+		fflush(fp);
+		fclose(fp);
                 fp = NULL;
             }
         }
+
+
     }
 }
-static void flog(const char* buffer){
-    write_log_file("/sdcard/NBS/FFMPEG.txt",FILE_MAX_SIZE, buffer, strlen(buffer));
+void flog(const char* buffer){
+    write_log_file("/sdcard/NBS/FFMPEG.txt",FILE_MAX_SIZE, buffer);
 }
