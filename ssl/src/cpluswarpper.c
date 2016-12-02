@@ -4,9 +4,8 @@
 
 #include "cpluswrapper.h"
 #include "hook_interface.h"
-using namespace ssl_hook;
 
-void on_ssl_create(void *ctx, void *ret, long long start_time, long long end_time){
-    ssl_hook::ssl_handler*  handler = get_ssl_handler();
-    handler->on_ssl_create(ctx, ret, start_time, end_time);
+extern "C" void on_ssl_create(void *ctx, void *ret, long long start_time, long long end_time) // wrapper function
+{
+    return get_ssl_handler()->on_ssl_create(ctx,ret,start_time,end_time);
 }
