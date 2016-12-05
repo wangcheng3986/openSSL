@@ -26,8 +26,9 @@ extern "C" {
 typedef struct worker
 {
     /*回调函数，任务运行时会调用此函数，注意也可声明成其它形式*/
-    void *(*process) (void *arg);
+    void *(*process) (void *arg, int mode);
     void *arg;/*回调函数的参数*/
+    int mode;/*回调函数的参数*/
     struct worker *next;
 
 } CThreadworker;
@@ -56,7 +57,7 @@ typedef struct
 
 void pool_init ();
 /*向线程池中加入任务*/
-int  pool_add_worker (void *(*process) (void *arg), void *arg);
+int  pool_add_worker (void *(*process) (void *, int ), void *arg, int mode);
 
 int pool_destroy ();
 

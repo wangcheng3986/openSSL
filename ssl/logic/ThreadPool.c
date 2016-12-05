@@ -39,12 +39,14 @@ void pool_init ()
 
 
 /*向线程池中加入任务*/
-int pool_add_worker (void *(*process) (void *arg), void *arg)
+int pool_add_worker (void *(*process) (void *, int), void *arg, int mode)
 {
+    pool_init();
     /*构造一个新任务*/
     CThreadworker *newworker = (CThreadworker *) malloc (sizeof (CThreadworker));
     newworker->process = process;
     newworker->arg = arg;
+    newworker->mode = mode;
     newworker->next = NULL;/*别忘置空*/
 
     pthread_mutex_lock (&(pool->queue_lock));
@@ -146,7 +148,7 @@ void * thread_routine (void *arg)
         pthread_mutex_unlock (&(pool->queue_lock));
 
         /*调用回调函数，执行任务*/
-        (*(worker->process)) (worker->arg);
+        (*(worker->process)) (worker->arg, worker->mode);
         free (worker);
         worker = NULL;
     }
