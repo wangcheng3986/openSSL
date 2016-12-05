@@ -1,5 +1,6 @@
 #include "../logic.h"
 #include "log.h"
+#include "ThreadPool.h"
 #include <time.h>
 #include <sys/time.h>
 #include <stddef.h>
@@ -14,9 +15,16 @@ UINT64 nb_getSysTime(){
 	return tm;
 }
 
+void * myprocess (void *arg)
+{
+	flog ("threadid is working on task");
+    return NULL;
+}
 
 void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time){
 	flog("nb_ssl_create");
+	pool_init();
+	pool_add_worker(myprocess,0);
    // get_ssl_handler()->on_ssl_create(ctx, ret, start_time, end_time);
 }
 
@@ -32,19 +40,16 @@ void nb_ssl_connect(void *ssl, int ret, UINT64 start_time, UINT64 end_time){
 
 void nb_ssl_read(void *ssl,void *buf,int num, int ret, UINT64 start_time, UINT64 end_time){
 	flog("nb_ssl_read");
+	pool_init();
+	pool_add_worker(myprocess,0);
 //    LOGD("nb_ssl_read");
    // get_ssl_handler()->on_ssl_read(ssl, buf, num, ret, start_time, end_time);
 }
 void nb_ssl_write(void *ssl,const void *buf,int num, int ret, UINT64 start_time, UINT64 end_time){
 	flog("nb_ssl_write");
+	pool_init();
+	pool_add_worker(myprocess,0);
 //    LOGD("nb_ssl_write");
    // get_ssl_handler()->on_ssl_write(ssl, buf, num, ret, start_time, end_time);
 }
-void nb_ssl_set_fd(void *s, int fd, int ret, UINT64 start_time){
-	flog("nb_ssl_set_fd");
-//    LOGD("nb_ssl_set_fd");
-    //get_ssl_handler()->on_ssl_set_fd(s, fd, ret, start_time);
-}
-void nb_ssl_get_fd(void *s, int fd, UINT64 start_time){
-	flog("nb_ssl_get_fd");
-}
+
