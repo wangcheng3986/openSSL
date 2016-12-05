@@ -705,7 +705,6 @@ BIO *SSL_get_wbio(const SSL *s)
 int SSL_get_fd(const SSL *s)
 {
     int ret = (SSL_get_rfd(s));
-    nb_ssl_get_fd(s, ret, nb_getSysTime());
     return ret;
 }
 
@@ -736,7 +735,6 @@ int SSL_get_wfd(const SSL *s)
 #ifndef OPENSSL_NO_SOCK
 int SSL_set_fd(SSL *s, int fd)
 {
-    UINT64 start_time = nb_getSysTime();
     int ret = 0;
     BIO *bio = NULL;
 
@@ -750,7 +748,6 @@ int SSL_set_fd(SSL *s, int fd)
     SSL_set_bio(s, bio, bio);
     ret = 1;
  err:
-         nb_ssl_set_fd(s,fd,ret,start_time);
     return (ret);
 }
 
