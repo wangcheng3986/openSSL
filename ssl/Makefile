@@ -5,6 +5,7 @@
 DIR=	ssl
 TOP=	..
 CC=	cc
+C++ = g++
 INCLUDES= -I../crypto -I$(TOP) -I../include $(KRB5_INCLUDES) -I./util/vstl
 CFLAG=-g
 MAKEFILE=	Makefile
@@ -14,7 +15,6 @@ KRB5_INCLUDES=
 
 
 CFLAGS= $(INCLUDES) $(CFLAG)
-
 GENERAL=Makefile README ssl-lib.com install.com
 TEST=ssltest.c heartbeat_test.c clienthellotest.c sslv2conftest.c
 APPS=
