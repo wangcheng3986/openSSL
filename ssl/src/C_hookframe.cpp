@@ -29,7 +29,7 @@ bool C_hookframe::process()
 
 static C_hookframe *inst = 0;
 
-ssl_hook::ssl_handler *get_ssl_handler()
+C_hookframe *get_ssl_handler()
 {
     if ( inst == 0 ) inst = new C_hookframe;
         return inst;

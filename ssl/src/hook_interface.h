@@ -24,4 +24,4 @@ namespace hook_core {
         virtual const char *ctrl(const char *cmd, const char *first, const char *second) = 0;
     };
 }
-ssl_hook::ssl_handler *get_ssl_handler();
+
