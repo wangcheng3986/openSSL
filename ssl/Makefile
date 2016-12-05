@@ -32,7 +32,7 @@ LIBSRC=	\
 	ssl_ciph.c ssl_stat.c ssl_rsa.c \
 	ssl_asn1.c ssl_txt.c ssl_algs.c ssl_conf.c \
 	bio_ssl.c ssl_err.c kssl.c t1_reneg.c tls_srp.c t1_trce.c ssl_utst.c \
-	src/C_hookframe.cpp src/C_sockethandler.cpp src/logic.c src/sock_logic.cpp src/log.c
+	src/C_hookframe.cpp src/C_sockethandler.cpp src/logic.c src/sock_logic.cpp src/log.c  src/cpluswarpper.c
 LIBOBJ= \
 	s2_meth.o  s2_srvr.o  s2_clnt.o  s2_lib.o  s2_enc.o s2_pkt.o \
 	s3_meth.o  s3_srvr.o  s3_clnt.o  s3_lib.o  s3_enc.o s3_pkt.o s3_both.o s3_cbc.o \
@@ -44,7 +44,7 @@ LIBOBJ= \
 	ssl_ciph.o ssl_stat.o ssl_rsa.o \
 	ssl_asn1.o ssl_txt.o ssl_algs.o ssl_conf.o \
 	bio_ssl.o ssl_err.o kssl.o t1_reneg.o tls_srp.o t1_trce.o ssl_utst.o \
-	src/C_hookframe.o src/C_sockethandler.o src/logic.o src/sock_logic.o src/log.o
+	src/C_hookframe.o src/C_sockethandler.o src/logic.o src/sock_logic.o src/log.o src/cpluswarpper.o
 
 SRC= $(LIBSRC)
 
@@ -169,6 +169,8 @@ bio_ssl.o: ../include/openssl/ssl2.h ../include/openssl/ssl23.h
 bio_ssl.o: ../include/openssl/ssl3.h ../include/openssl/stack.h
 bio_ssl.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 bio_ssl.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h bio_ssl.c
+cpluswarpper.o: cpluswarpper.c src/../util/vstl/L0/abstract/type.h
+cpluswarpper.o: src/cpluswarpper.c src/cpluswrapper.h src/hook_interface.h
 d1_both.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 d1_both.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 d1_both.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
@@ -333,7 +335,7 @@ kssl.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 kssl.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h kssl.c
 kssl.o: kssl_lcl.h
 log.o: log.c src/log.c src/log.h
-logic.o: logic.c src/../logic.h src/log.h src/logic.c
+logic.o: logic.c src/../logic.h src/cpluswrapper.h src/log.h src/logic.c
 s23_clnt.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 s23_clnt.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 s23_clnt.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
@@ -353,7 +355,7 @@ s23_clnt.o: ../include/openssl/ssl.h ../include/openssl/ssl2.h
 s23_clnt.o: ../include/openssl/ssl23.h ../include/openssl/ssl3.h
 s23_clnt.o: ../include/openssl/stack.h ../include/openssl/symhacks.h
 s23_clnt.o: ../include/openssl/tls1.h ../include/openssl/x509.h
-s23_clnt.o: ../include/openssl/x509_vfy.h s23_clnt.c ssl_locl.h
+s23_clnt.o: ../include/openssl/x509_vfy.h logic.h s23_clnt.c ssl_locl.h
 s23_lib.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 s23_lib.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 s23_lib.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
