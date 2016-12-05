@@ -11,8 +11,8 @@ void *thread_routine (void *arg);
 static CThreadpool *pool = NULL;
 void pool_init ()
 {
-    max_thread_num = 10;
-    if*(pool != NULL){
+    int max_thread_num = 10;
+    if(pool != NULL){
         return;
     }
 
