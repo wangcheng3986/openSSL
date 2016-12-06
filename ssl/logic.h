@@ -5,10 +5,7 @@
 extern "C" {
 #endif
 
-#ifndef UINT64
-#define UINT64 unsigned long long
-#endif
-
+#include "./logic/entity.h"
 
 UINT64 nb_getSysTime(); 
 void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time);

@@ -4,54 +4,17 @@
 #include <time.h>
 #include <sys/time.h>
 #include <stddef.h>
+#include "Handler.h"
 
 
-typedef struct {
-	void *_ctx;
-	void *_ret;
-	UINT64 _begin_time;
-	UINT64 _end_time;
-}SSL_NEW;
-
-typedef struct {
-	void *_ssl;
-	UINT64 _begin_time;
-}SSL_FREE;
-
-typedef struct {
-	void *_ssl;
-	int _ret;
-	UINT64 _begin_time;
-	UINT64 _end_time;
-}SSL_CONNECT;
-
-typedef struct {
-	void * _ssl;
-	int _ret;
-	int _len;
-	UINT64 _begin_time;
-	UINT64 _end_time;
-	void *_buf;
-}SSL_READ;
-
-
-
-typedef struct {
-	void * _ssl;
-	int _ret;
-	int _len;
-	UINT64 _begin_time;
-	UINT64 _end_time;
-	void *_buf;
-}SSL_WRITE;
 
 UINT64 nb_getSysTime(){
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	UINT64 tm = (tv.tv_sec) * 1000000 + tv.tv_usec;
-//	char buf[64];
-//	snprintf(buf, sizeof(buf), "nb_getSysTime---%u,%u", tv.tv_sec,tv.tv_usec);
-//	flog(buf);
+	char buf[256];
+	snprintf(buf, sizeof(buf), "nb_getSysTime---%u,%u", tv.tv_sec,tv.tv_usec);
+	flog(buf);
 	return tm;
 }
 
@@ -59,24 +22,23 @@ void * myprocess (void *arg, int mode)
 {
 	switch (mode){
 		case 0:{
-			SSL_NEW *obj = (SSL_NEW*)arg;
-			flog("ssl_new");
+			handle_ssl_new((SSL_NEW*)arg);
 		}
 			break;
 		case 1:{
-			flog("ssl_free");
+			handle_ssl_free((SSL_FREE*)arg);
 		}
 			break;
 		case 2:{
-			flog("ssl_connect");
+			handle_ssl_connect((SSL_CONNECT*)arg);
 		}
 			break;
 		case 3:{
-			flog("ssl_read");
+			handle_ssl_read((SSL_READ*)arg);
 		}
 			break;
 		case 4:{
-			flog("ssl_write");
+			handle_ssl_write((SSL_WRITE*)arg);
 		}
 			break;
 	}
