@@ -14,10 +14,9 @@ ConnectionInfo* get(void* ssl){
     ConnectionInfo* tail = head;
     while (head){
         if(head->_ssl == ssl){
-            head->_connected=false;
+            head->_connected= 0;
             head->_err_num=0;
             head->_ref_count=0;
-            head->_use_ssl = false;
             head->curr_time = 0;
             head->connect_end=0;
             head->start_time=0;
@@ -61,7 +60,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
 void on_connect_finished(ConnectionInfo *conn_info, int err_code){
     flog("----on_connect_finished----");
     if ( conn_info->_connected ) return;
-    conn_info->_connected = true;
+    conn_info->_connected = 1;
     if ( conn_info->connect_start == 0 ) return;
 
     if ( conn_info->_ssl )

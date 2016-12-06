@@ -60,9 +60,8 @@ typedef struct  _ConnectionInfo{
     UINT64 curr_time;
     int _err_num;
     void *_ssl;
-    bool _use_ssl;
     int _ref_count;
-    bool _connected;
+    int _connected;
 
     struct _ConnectionInfo *next;
 }ConnectionInfo;
