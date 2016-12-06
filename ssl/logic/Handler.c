@@ -13,7 +13,6 @@ void handle_ssl_new(SSL_NEW* data){
         flog("handle_ssl_new");
         ConnectionInfo* ci = get(data->_ret);
         ci->_ssl = data->_ret;
-        ci->_use_ssl = true;
         ci->start_time = data->_begin_time;
     }
 }
@@ -35,7 +34,7 @@ void handle_ssl_connect(SSL_CONNECT* data){
         ci->curr_time = data->_end_time;
 
         if ( ci->connect_start == 0 )
-            conn_info->connect_start = data->_begin_time;
+            ci->connect_start = data->_begin_time;
         if ( data->_ret > 0 ) {
             ci->connect_end = data->_end_time;
             on_connect_finished(ci, 0);
