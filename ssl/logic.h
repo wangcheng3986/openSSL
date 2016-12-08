@@ -7,7 +7,7 @@ extern "C" {
 
 #include "./logic/entity.h"
 
-long nb_getSysTime();
+long long nb_getSysTime();
 void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time);
 void nb_ssl_close(void *ssl, UINT64 start_time);
 void nb_ssl_connect(void *ssl, int ret, UINT64 start_time, UINT64 end_time);

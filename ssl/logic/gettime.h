@@ -6,6 +6,6 @@
 #define LOGIC_GETTIME_H
 
 
-long getSysTime();
+long long getSysTime();
 
 #endif //LOGIC_GETTIME_H

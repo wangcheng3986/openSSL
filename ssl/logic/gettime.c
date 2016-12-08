@@ -9,12 +9,12 @@
 #include <sys/time.h>
 #include <stddef.h>
 
-long getSysTime(){
+long long getSysTime(){
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    long tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
+    long long tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
     char buf[256];
-    sprintf(buf, "--------------------%ld--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
+    sprintf(buf, "--------------------%lld--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
     flog(buf);
     return tm;
 }

@@ -91,20 +91,23 @@ static void on_break(ConnectionInfo *ci)
     on_user_close(ci, -3);
 }
 static void on_up(ConnectionInfo* ci,const char *buf, int len){
+    flog("on_up");
     push_req(ci->reqQueue,buf, len, getSysTime());
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
+    flog("on_dowm");
     if ( ! is_req_http(ci->reqQueue) ) {
         ci->rspQueue->_downsize += len;
         return;
     }
     int size = 0;
     while ( len ) {
+        flog("push_rsp");
         size = push_rsp(ci->rspQueue,buf, len, getSysTime());
         buf += size;
         len -= size;
-        if ( strlen(ci->rspQueue->response) > 0 ) {
+        if ( ci->rspQueue->response != NULL && strlen(ci->rspQueue->response) > 0 ) {
 
             switch ( ci->rspQueue->_state )
             {

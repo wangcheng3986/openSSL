@@ -6,6 +6,7 @@
 #include "ReqQueue.h"
 #include "stream.h"
 #include "ReqInfo.h"
+#include "log.h"
 
 #define Min(a,b) (( a < b ) ? a: b)
 static int pre_parse(RequestQueue* rq,const char *buf, int len);
@@ -129,6 +130,7 @@ void destroy_req(RequestQueue* rq){
 }
 
 void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time){
+    flog("push_req");
     if(rq == NULL){
         return;
     }
@@ -137,16 +139,20 @@ void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time){
         switch ( rq->_state )
         {
             case no_parsed:{
+
+                flog("push_req:no_parsed");
                 size = pre_parse(rq,buf, len);
                 break;
              }
 
             case Protocol_head:{
+                flog("push_req:Protocol_head");
                 size = parse_head(rq,buf, len, curr_time);
                 break;
             }
 
             case Protocol_content:{
+                flog("push_req:Protocol_content");
                 if ( rq->_content_left >=0 )
                 {
                     size = Min(rq->_content_left, len);
@@ -163,10 +169,12 @@ void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time){
             }
 
             case not_http:
+                flog("push_req:not_http");
                 size = len;
                 break;
 
             default:
+                flog("push_req:default");
                 size = len;
                 break;
         }

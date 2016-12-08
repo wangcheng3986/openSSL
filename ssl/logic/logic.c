@@ -9,7 +9,7 @@
 #include <malloc.h>
 
 
-long nb_getSysTime(){
+long long nb_getSysTime(){
 	return getSysTime();
 }
 
