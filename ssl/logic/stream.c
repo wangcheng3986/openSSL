@@ -77,7 +77,7 @@ dword_t stream_pop_back(Stream* s, dword_t len, char *buf) {
     len = Min (s->_used, len);
     dword_t ret = len;
     while ( len ) {
-        Node *top_node =list_back( s->_list));
+        Node *top_node =list_back( s->_list);
         word_t poped = Min (len, node_total_size(top_node));
         node_pop_back(top_node,buf ?buf + len - poped: 0, poped);
         len -= poped;
