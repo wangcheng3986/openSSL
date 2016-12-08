@@ -11,9 +11,9 @@
 UINT64 nb_getSysTime(){
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	UINT64 tm = (tv.tv_sec) * 1000000 + tv.tv_usec;
+	UINT64 tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
 	char buf[256];
-	snprintf(buf, sizeof(buf), "nb_getSysTime---%u,%u", tv.tv_sec,tv.tv_usec);
+	sprintf(buf, sizeof(buf), "--------------------%lld--%ld,%ld",tm,  tv.tv_sec,tv.tv_usec);
 	flog(buf);
 	return tm;
 }

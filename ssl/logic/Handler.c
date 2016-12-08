@@ -23,6 +23,7 @@ void handle_ssl_free(SSL_FREE* data){
         if (ci->start_time <= data->_begin_time){
             ci->curr_time = data->_begin_time;
         }
+        on_connect_finished(ci,-1);
         on_user_close(ci,-1);
     }
 
