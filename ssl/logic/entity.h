@@ -168,7 +168,7 @@ typedef struct _request_decoder {
     char _ver[12];
     dword_t _state;
     dword_t _head_size;
-    string_map _params;
+   // string_map _params;
 }request_decoder;
 
 #ifdef  __cplusplus
