@@ -55,7 +55,7 @@ Node* node_create(){
 void node_destroy(Node* n){
     if(n){
         free(n);
-        n= null;
+        n= NULL;
     }
 }
 
