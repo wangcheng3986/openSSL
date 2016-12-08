@@ -6,7 +6,6 @@
 #define LOGIC_LIST_H
 
 #include "entity.h"
-#include "../../../hook/jni/modules/plt_android/linuxtls.h"
 
 List * list_create();
 Node * list_front(List* l);
