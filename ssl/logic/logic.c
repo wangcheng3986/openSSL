@@ -3,9 +3,10 @@
 #include "ThreadPool.h"
 #include <time.h>
 #include <sys/time.h>
-#include <stddef.h>
+#include <stdio.h>
 #include "Handler.h"
-
+#include <stdlib.h>
+#include <malloc.h>
 
 
 UINT64 nb_getSysTime(){
@@ -13,7 +14,7 @@ UINT64 nb_getSysTime(){
 	gettimeofday(&tv, NULL);
 	UINT64 tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
 	char buf[256];
-	sprintf(buf, sizeof(buf), "--------------------%lld--%ld,%ld",tm,  tv.tv_sec,tv.tv_usec);
+	sprintf(buf, "--------------------%lld--%ld,%ld",tm,  tv.tv_sec,tv.tv_usec);
 	flog(buf);
 	return tm;
 }

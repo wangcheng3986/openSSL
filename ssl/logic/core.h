@@ -8,7 +8,7 @@
 #include <stddef.h>
 #include "entity.h"
 
-static ConnectionInfo* _SSLConnectionList = NULL;
+
 
 ConnectionInfo* get(void* ssl);
 

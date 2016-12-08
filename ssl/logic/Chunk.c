@@ -3,3 +3,5 @@
 //
 
 #include "Chunk.h"
+#include <stdlib.h>
+#include <malloc.h>

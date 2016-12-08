@@ -9,6 +9,9 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
+#include <malloc.h>
+
 #ifndef UINT64
 #define UINT64 unsigned long long
 #endif

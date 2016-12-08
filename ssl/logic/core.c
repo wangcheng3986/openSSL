@@ -5,6 +5,11 @@
 #include "core.h"
 #include "log.h"
 #include <errno.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+static ConnectionInfo* _SSLConnectionList = NULL;
+
 
 static void on_up(ConnectionInfo* ci,const char *buf, int len);
 static void on_down(ConnectionInfo* ci, const char *buf, int len);
