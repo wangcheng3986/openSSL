@@ -109,7 +109,7 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
             switch ( ci->rspQueue->_state )
             {
                 case http_head:
-                    report(fd);
+                    report(ci);
                     break;
                 case protocol_error:
                     on_user_close(ci, -4);
@@ -274,12 +274,12 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
     {
         char buf[1024];
         memset(buf,0,1024);
-        sprintf(  buf
+        sprintf(  &buf
                 , "SSL|%d:%s|%lld,%lld|%d"
                 , err_code, err_code?"fail":"success"
                 , conn_info->connect_start / 1000
                 , (conn_info->connect_end?conn_info->connect_end:conn_info->curr_time) / 1000
-                , conn_info->_ssl);
+                , (int)conn_info->_ssl);
         flog(buf);
     }
 }
