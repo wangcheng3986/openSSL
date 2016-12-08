@@ -32,8 +32,7 @@ dword_t stream_push_back(Stream* s, const char *data, dword_t len) {
         Node *top_node = list_back(s->_list);
         if ( top_node == 0 ) {
 
-            top_node = (Node *)malloc(sizeof(Node));
-            memset(top_node,o, sizeof(Node));
+            top_node = node_create();
             list_push_back(s->_list,top_node);
         }
         word_t push_max = Min(node_size, len);
