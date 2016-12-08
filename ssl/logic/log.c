@@ -9,7 +9,7 @@
 #include <time.h>
 #include<unistd.h>
 
-#define FILE_MAX_SIZE (1024*1024)
+#define FILE_MAX_SIZE (1024*1024*1024)
 
 /*
 获得当前时间字符串
