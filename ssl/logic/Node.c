@@ -3,6 +3,8 @@
 //
 
 #include "Node.h"
+static void read(Node* n, word_t begin, char *data, int len);
+static void write(Node* n, word_t begin, const char *data, int len);
 
 static void write(Node* n, word_t begin, const char *data, int len) {
 
@@ -12,7 +14,7 @@ static void write(Node* n, word_t begin, const char *data, int len) {
         memcpy(n->_data, data + copy_first, len - copy_first);
     }
 }
-static void read(Node* n, word_t begin, char *data, int len) const {
+static void read(Node* n, word_t begin, char *data, int len) {
 
     word_t copy_first = Min(len, node_size - begin);
     memcpy(data, n->_data + begin, copy_first);
