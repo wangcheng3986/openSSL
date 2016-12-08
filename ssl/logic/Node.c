@@ -60,7 +60,7 @@ void node_destroy(Node* n){
 }
 
 word_t node_append(Node* n, const char *data, word_t len) {
-    return push_back(n,data, len);
+    return node_push_back(n,data, len);
 }
 word_t node_push_back(Node* n,const char *data, word_t len) {
     //copy size
