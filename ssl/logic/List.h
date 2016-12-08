@@ -6,6 +6,7 @@
 #define LOGIC_LIST_H
 
 #include "entity.h"
+#include "../../../hook/jni/modules/plt_android/linuxtls.h"
 
 List * list_create();
 Node * list_front(List* l);
@@ -17,5 +18,5 @@ Node *list_pop_back(List* l);
 void list_erase(List* l,Node *pnode);
 int list_size(List* l);
 
-
+void list_destroy(List* l);
 #endif //LOGIC_LIST_H

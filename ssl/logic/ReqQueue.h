@@ -10,5 +10,6 @@
 RequestQueue* create_req();
 void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time);
 int is_req_http(RequestQueue* rq);
+void destroy_req(RequestQueue* rq);
 
 #endif //LOGIC_REQQUEUE_H

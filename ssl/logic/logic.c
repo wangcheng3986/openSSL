@@ -1,22 +1,16 @@
 #include "../logic.h"
 #include "log.h"
 #include "ThreadPool.h"
-#include <time.h>
-#include <sys/time.h>
+
 #include <stdio.h>
 #include "Handler.h"
+#include "gettime.h"
 #include <stdlib.h>
 #include <malloc.h>
 
 
-UINT64 nb_getSysTime(){
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	UINT64 tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
-	char buf[256];
-	sprintf(buf, "--------------------%lld--%ld,%ld",tm,  tv.tv_sec,tv.tv_usec);
-	flog(buf);
-	return tm;
+long nb_getSysTime(){
+	return getSysTime();
 }
 
 void * myprocess (void *arg, int mode)

@@ -4,6 +4,9 @@
 
 #include "core.h"
 #include "log.h"
+#include "RspQueue.h"
+#include "ReqQueue.h"
+#include "gettime.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -15,6 +18,9 @@ static void on_up(ConnectionInfo* ci,const char *buf, int len);
 static void on_down(ConnectionInfo* ci, const char *buf, int len);
 static void report(ConnectionInfo* ci);
 static void on_break(ConnectionInfo * ci);
+static void remove_conn(ConnectionInfo * ci);
+
+
 ConnectionInfo* get(void* ssl){
     ConnectionInfo* head = _SSLConnectionList;
     ConnectionInfo* tail = head;
@@ -27,6 +33,8 @@ ConnectionInfo* get(void* ssl){
             head->connect_end=0;
             head->start_time=0;
             head->connect_start=0;
+            head->reqQueue = create_req();
+            head->rspQueue = create_rsp();
             return head;
         }
         head = head->next;
@@ -46,58 +54,80 @@ ConnectionInfo* get(void* ssl){
 
     return ci;
 }
+
+static void remove_conn(ConnectionInfo * ci){
+    if(ci == NULL){
+        return;
+    }
+    if(_SSLConnectionList == ci){
+        _SSLConnectionList = NULL;
+        destroy_req(ci->reqQueue);
+        destroy_rsp(ci->rspQueue);
+        free(ci);
+        ci = NULL;
+        return;
+    }
+    ConnectionInfo* cur = _SSLConnectionList->next;
+    ConnectionInfo* pre = _SSLConnectionList;
+    while (cur){
+        if(cur->_ssl == ci->_ssl){
+            pre->next = cur->next;
+            break;
+        }
+        pre = cur;
+        cur = cur->next;
+    }
+
+    destroy_req(ci->reqQueue);
+    destroy_rsp(ci->rspQueue);
+    free(ci);
+    ci = NULL;
+}
+
+
 static void on_break(ConnectionInfo *ci)
 {
     on_connect_finished(ci,-1);
     on_user_close(ci, -3);
 }
 static void on_up(ConnectionInfo* ci,const char *buf, int len){
-//    _requests.push(buf, len, curr_time);
+    push_req(ci->reqQueue,buf, len, getSysTime());
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
-//    if ( ! _requests.is_http() ) {
-//        _response._downsize += len;
-//        return;
-//    }
-//    int size = 0;
-//    while ( len ) {
-//        size = _response.push(buf, len, curr_time);
-////         printf("fd(%d)parsed: %d/%d\n",fd, size, len);
-////         printf("%.*s", size, buf);
-////         printf("\n-----------_req_list.size=%d---------------------\n", _requests._reqs.size());
-//        buf += size;
-//        len -= size;
-//        if ( _response.response.size() ) {
-//
-//            switch ( _response._state )
-//            {
-//                case ResponseQueue::http_head:
-////                printf("report\n");
-//                    report(fd);
-////                printf("report done\n");
-//                    _response.reset();
-//                    break;
-//                case ResponseQueue::protocol_error:
-////                printf("on_user_close\n");
-//                    on_user_close(fd, -4);
-////                printf("on_user_close done\n");
-//                    _response.reset();
-//                    return;
-//                    break;
-//                case ResponseQueue::http_content:
-//                    //δ����
-////                printf("not done\n");
-//                    break;
-//                default:
-//                    assert(false);
-//                    break;
-//            }
-//        }
-//    }
+    if ( ! is_req_http(ci->reqQueue) ) {
+        ci->rspQueue->_downsize += len;
+        return;
+    }
+    int size = 0;
+    while ( len ) {
+        size = push_rsp(ci->rspQueue,buf, len, getSysTime());
+        buf += size;
+        len -= size;
+        if ( strlen(ci->rspQueue->response) > 0 ) {
+
+            switch ( ci->rspQueue->_state )
+            {
+                case http_head:
+                    report(fd);
+                    break;
+                case protocol_error:
+                    on_user_close(ci, -4);
+                    return;
+                    break;
+                case http_content:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
 
+
+
 static void report(ConnectionInfo* ci){
+    flog("report");
 //    container_l2::smart_buffer<char, 1024 * 10> buffer( (_response.response.size() + _requests._reqs.front().request.size() + 1024 ) * 2 );
 //
 //    protocol3_http::response_decoder & res_decoder = _response._res;
@@ -150,9 +180,11 @@ static void report(ConnectionInfo* ci){
 //    size += sprintf(buffer.buffer() + size, "|%lld|%lld|%s", req.upload + req.request.size(), ret_size + _response.response.size(), url.c_str());
 //    _instance->on_task(buffer.buffer());
 //    _requests._reqs.pop_front();
+    remove_conn(ci);
 }
 
 void on_user_close(ConnectionInfo* ci, int result_code){
+    flog("on_user_close");
 //    if ( ! _requests.is_http() ) return;
 //    if ( _requests._reqs.size() == 0 ) return ;
 //
@@ -229,6 +261,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
 //        _instance->on_task(buffer.buffer());
 //        _requests._reqs.pop_front();
 //    }
+    remove_conn(ci);
 }
 
 void on_connect_finished(ConnectionInfo *conn_info, int err_code){

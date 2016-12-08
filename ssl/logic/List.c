@@ -2,6 +2,7 @@
 // Created by Administrator on 2016/12/7.
 //
 
+#include <stddef.h>
 #include "List.h"
 #include "Node.h"
 List * list_create(){
@@ -9,6 +10,15 @@ List * list_create(){
     memset(l,0, sizeof(List));
     return l;
 }
+
+void list_destroy(List* l){
+    if(l!= NULL){
+        free(l);
+        l= NULL;
+    }
+}
+
+
 Node *list_front(List* l){
     return l->_left;
 }

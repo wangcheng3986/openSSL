@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "ReqQueue.h"
 #include "stream.h"
+#include "ReqInfo.h"
 
 #define Min(a,b) (( a < b ) ? a: b)
 static int pre_parse(RequestQueue* rq,const char *buf, int len);
@@ -117,7 +118,14 @@ RequestQueue* create_req(){
     RequestQueue* rq = (RequestQueue*)malloc(sizeof(RequestQueue));
     memset(rq,0, sizeof(RequestQueue));
     rq->_cache = stream_create();
+    rq->_reqs = ReqInfo_create();
     return rq;
+}
+void destroy_req(RequestQueue* rq){
+    if (rq != NULL){
+        steam_destroy(rq->_cache);
+        ReqInfo_destroy(rq->_reqs);
+    }
 }
 
 void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time){
@@ -131,7 +139,7 @@ void push_req(RequestQueue* rq, const char *buf, int len, UINT64 curr_time){
             case no_parsed:{
                 size = pre_parse(rq,buf, len);
                 break;
-            }
+             }
 
             case Protocol_head:{
                 size = parse_head(rq,buf, len, curr_time);

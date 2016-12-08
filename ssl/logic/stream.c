@@ -15,6 +15,14 @@ Stream* stream_create(){
     return s;
 }
 
+void steam_destroy(Stream* s){
+    if (s!= NULL){
+        list_destroy(s->_list);
+        free(s);
+        s= NULL;
+    }
+}
+
 void stream_clear(Stream* s){
     if(s->_list!= NULL){
         while ( list_size(s->_list) > 0 ) {

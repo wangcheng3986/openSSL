@@ -9,12 +9,14 @@
 
 static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len, UINT64 curr_time);
 
-ResponseQueue* create_rsq(){
+ResponseQueue* create_rsp(){
     ResponseQueue* rsp = (ResponseQueue*)malloc(sizeof(ResponseQueue));
     memset(rsp,0, sizeof(ResponseQueue));
     return rsp;
 }
+void destroy_rsp(ResponseQueue* rsp){
 
+}
 static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len, UINT64 curr_time){
 
 }
