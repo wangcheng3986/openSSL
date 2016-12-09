@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include "RspQueue.h"
 
-#define Min(a,b) (( a < b ) ? a: b)
 
 static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
 
@@ -50,17 +49,19 @@ static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
             }
             rq->_state = http_content;
             rq->_contentleft = rq->_req->_contentlength - strlen(s)+ 4;
+            if(rq->_contentleft<=0){
+                rq->_state = http_end;
+            }
         }
     };
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
     if(rq!= NULL){
-        int rvSize = 0;
         switch ( rq->_state )
         {
             case http_head:
-                rvSize = parse_rsp_head(rq, buf, len);
+                parse_rsp_head(rq, buf, len);
                 break;
             case http_content:
                 break;
@@ -68,10 +69,6 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 return ;
                 break;
         }
-        rq->_downsize += size;
-        rq->_contentleft = rq->_req->_contentlength - rvSize;
-        if(rq->_contentleft<=0){
-            rq->_state = http_end;
-        }
+        rq->_downsize += len;
     }
 }

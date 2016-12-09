@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define Min(a,b) (( a < b ) ? a: b)
 static void parse_head(RequestQueue* rq,const char *buf, int len);
 static int parsed(RequestQueue* rq);
 
