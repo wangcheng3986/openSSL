@@ -4,10 +4,9 @@
 
 #include <stddef.h>
 #include "ReqQueue.h"
-#include "ReqInfo.h"
 #include "log.h"
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
 
 #define Min(a,b) (( a < b ) ? a: b)
 static void parse_head(RequestQueue* rq,const char *buf, int len);
