@@ -146,7 +146,7 @@ IMPLEMENT_ssl23_meth_func(SSLv23_client_method,
 
 int ssl23_connect(SSL *s)
 {
-    UINT64 starttime = nb_getSysTime();
+    int64 starttime = nb_getSysTime();
     BUF_MEM *buf = NULL;
     unsigned long Time = (unsigned long)time(NULL);
     void (*cb) (const SSL *ssl, int type, int val) = NULL;

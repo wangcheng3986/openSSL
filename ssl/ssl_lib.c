@@ -295,7 +295,7 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
 SSL *SSL_new(SSL_CTX *ctx)
 {
     SSL *s;
-    UINT64 startTime = nb_getSysTime();
+    int64 startTime = nb_getSysTime();
     if (ctx == NULL) {
         SSLerr(SSL_F_SSL_NEW, SSL_R_NULL_SSL_CTX);
         return (NULL);
@@ -1005,7 +1005,7 @@ int SSL_accept(SSL *s)
 
 int SSL_connect(SSL *s)
 {
-    UINT64 starttime = nb_getSysTime();
+    int64 starttime = nb_getSysTime();
     if (s->handshake_func == 0)
         /* Not properly initialized yet */
         SSL_set_connect_state(s);
@@ -1021,7 +1021,7 @@ long SSL_get_default_timeout(const SSL *s)
 
 int SSL_read(SSL *s, void *buf, int num)
 {
-    UINT64 start_time = nb_getSysTime();
+    int64 start_time = nb_getSysTime();
     if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_READ, SSL_R_UNINITIALIZED);
         return -1;
@@ -1051,7 +1051,7 @@ int SSL_peek(SSL *s, void *buf, int num)
 
 int SSL_write(SSL *s, const void *buf, int num)
 {
-    UINT64 start_time = nb_getSysTime();
+    int64 start_time = nb_getSysTime();
 if (s->handshake_func == 0) {
         SSLerr(SSL_F_SSL_WRITE, SSL_R_UNINITIALIZED);
         return -1;
