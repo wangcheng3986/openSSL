@@ -195,11 +195,11 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
     {
         char buf[1024];
         memset(buf,0,1024);
-        sprintf(  &buf
+        sprintf(  buf
                 , "SSL|%d:%s|%lld,%lld|%d"
                 , err_code, err_code?"fail":"success"
-                , conn_info->connect_start / 1000
-                , (conn_info->connect_end?conn_info->connect_end:conn_info->curr_time) / 1000
+                , conn_info->connect_start
+                , conn_info->connect_end
                 , (int)conn_info->_ssl);
         flog(buf);
     }
@@ -208,10 +208,7 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
 void on_read_end(ConnectionInfo *ci, char *buf, int ret){
     flog("----on_read_end----");
     flog(buf);
-    if ( ci->connect_end == 0 ) {
-        ci->connect_end = start_time;
-        on_connect_finished(ci,0);
-    }
+
     int read_size = -1;
     if ( ret > 0 )
     {
@@ -236,10 +233,6 @@ void on_read_end(ConnectionInfo *ci, char *buf, int ret){
 void on_write_end(ConnectionInfo *ci, char *buf, int len, int ret){
     flog("----on_write_end----");
     flog(buf);
-    if ( ci->connect_end == 0 ) {
-        ci->connect_end = start_time;
-        on_connect_finished(ci,0);
-    }
     int up_size = -1;
     if ( ret > 0 )
     {
