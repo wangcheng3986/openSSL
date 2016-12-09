@@ -9,7 +9,7 @@
 #include <sys/time.h>
 #include <stddef.h>
 
-long long getSysTime(){
+int64 getSysTime(){
     struct timeval tv;
     gettimeofday(&tv, NULL);
     long long tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;

@@ -40,7 +40,7 @@ void * myprocess (void *arg, int mode)
     return NULL;
 }
 
-void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time){
+void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time){
 	SSL_NEW *obj = (SSL_NEW*)malloc(sizeof(SSL_NEW));
 	obj->_begin_time = start_time;
 	obj->_ctx= ctx;
@@ -49,13 +49,13 @@ void nb_ssl_create(void *ctx, void *ret, UINT64 start_time, UINT64 end_time){
 	pool_add_worker(myprocess,obj,0);
 }
 
-void nb_ssl_close(void *ssl, UINT64  start_time){
+void nb_ssl_close(void *ssl, int64  start_time){
 	SSL_FREE *obj = (SSL_FREE*)malloc(sizeof(SSL_FREE));
 	obj->_begin_time = start_time;
 	obj->_ssl = ssl;
 	pool_add_worker(myprocess,obj,1);
 }
-void nb_ssl_connect(void *ssl, int ret, UINT64 start_time, UINT64 end_time){
+void nb_ssl_connect(void *ssl, int ret, int64 start_time, int64 end_time){
 	SSL_CONNECT *obj = (SSL_CONNECT*)malloc(sizeof(SSL_CONNECT));
 	obj->_begin_time = start_time;
 	obj->_ssl= ssl;
@@ -64,7 +64,7 @@ void nb_ssl_connect(void *ssl, int ret, UINT64 start_time, UINT64 end_time){
 	pool_add_worker(myprocess,obj,2);
 }
 
-void nb_ssl_read(void *ssl,void *buf,int num, int ret, UINT64 start_time, UINT64 end_time){
+void nb_ssl_read(void *ssl,void *buf,int num, int ret, int64 start_time, int64 end_time){
 	SSL_READ *obj = (SSL_READ*)malloc(sizeof(SSL_READ));
 	obj->_begin_time = start_time;
 	obj->_ssl= ssl;
@@ -75,7 +75,7 @@ void nb_ssl_read(void *ssl,void *buf,int num, int ret, UINT64 start_time, UINT64
 	obj->_len = num;
 	pool_add_worker(myprocess,obj,3);
 }
-void nb_ssl_write(void *ssl,const void *buf,int num, int ret, UINT64 start_time, UINT64 end_time){
+void nb_ssl_write(void *ssl,const void *buf,int num, int ret, int64 start_time, int64 end_time){
 	SSL_WRITE *obj = (SSL_WRITE*)malloc(sizeof(SSL_WRITE));
 	obj->_begin_time = start_time;
 	obj->_ssl= ssl;

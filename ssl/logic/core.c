@@ -6,7 +6,7 @@
 #include "log.h"
 #include "RspQueue.h"
 #include "ReqQueue.h"
-#include "gettime.h"
+#include "base64_encode.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -28,13 +28,10 @@ ConnectionInfo* get(void* ssl){
         if(head->_ssl == ssl){
             head->_connected= 0;
             head->_err_num=0;
-            head->_ref_count=0;
-            head->curr_time = 0;
             head->connect_end=0;
-            head->start_time=0;
             head->connect_start=0;
             head->reqQueue = create_req();
-            head->rspQueue = create_rsp();
+            head->rspQueue = create_rsp(head->reqQueue);
             return head;
         }
         head = head->next;
@@ -92,37 +89,26 @@ static void on_break(ConnectionInfo *ci)
 }
 static void on_up(ConnectionInfo* ci,const char *buf, int len){
     flog("on_up");
-    push_req(ci->reqQueue,buf, len, getSysTime());
+    push_req(ci->reqQueue,buf, len);
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
-    flog("on_dowm");
-    if ( ! is_req_http(ci->reqQueue) ) {
-        ci->rspQueue->_downsize += len;
-        return;
-    }
-    int size = 0;
-    while ( len ) {
-        flog("push_rsp");
-        size = push_rsp(ci->rspQueue,buf, len, getSysTime());
-        buf += size;
-        len -= size;
-        if ( ci->rspQueue->response != NULL && strlen(ci->rspQueue->response) > 0 ) {
+    push_rsp(ci->rspQueue,buf, len);
+    if ( ci->rspQueue->responseHeader != NULL && strlen(ci->rspQueue->responseHeader) > 0 ) {
 
-            switch ( ci->rspQueue->_state )
-            {
-                case http_head:
-                    report(ci);
-                    break;
-                case protocol_error:
-                    on_user_close(ci, -4);
-                    return;
-                    break;
-                case http_content:
-                    break;
-                default:
-                    break;
-            }
+        switch ( ci->rspQueue->_state )
+        {
+            case http_head:
+                report(ci);
+                break;
+            case http_end:
+                on_user_close(ci, -4);
+                return;
+                break;
+            case http_content:
+                break;
+            default:
+                break;
         }
     }
 }
@@ -131,139 +117,71 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
 
 static void report(ConnectionInfo* ci){
     flog("report");
-//    container_l2::smart_buffer<char, 1024 * 10> buffer( (_response.response.size() + _requests._reqs.front().request.size() + 1024 ) * 2 );
-//
-//    protocol3_http::response_decoder & res_decoder = _response._res;
-//    RequestInfo &req = _requests._reqs.front();
-//    UINT64 ret_size = 0;
-//    protocol3_http::request_decoder req_decoder(get_allocator());
-//    {
-//        container_l2::stream<1000> req_stream;
-//        req_stream.push_back(req.request.c_str(), req.request.size());
-//        container_l2::my_stream_wrapper<1000> wrapper(req_stream);
-//        req_decoder.parse(wrapper);
-//
-//        ret_size = req.recved;
-//
-//        if ( res_decoder.trans_mode() == protocol3_http::response_decoder::byclose )
-//        {
-//            ret_size = _response._downsize - _response.response.size();
-//        }
-//        else if ( res_decoder.trans_mode() != protocol3_http::response_decoder::chunked )
-//        {
-//            ret_size = res_decoder.ret_size() - _response._content_left;
-//        }
-//    }
-//    container_l2::string url(_use_ssl?"https://":"http://", get_allocator());
-//    url.append(protocol3_http::get_val(req_decoder.params(), "Host"));
-//    //����uri�д�http ����https���������
-//    const char *str = req_decoder.query("uri");
-//    char *str1 = strstr(str, "http://");
-//    char *str2 = strstr(str, "https://");
-//    if (str1 || str2) {
-//        url.clear();
-//    }
-//    url.append(str);
-//
-//    int size = sprintf(buffer.buffer(), "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|"
-//            , 0
-//            , "success"
-//            , req.start_time / 1000
-//            , req.req_end_time / 1000
-//            , req.response_time / 1000
-//            , this->curr_time / 1000
-//            , fd
-//            , res_decoder.rcode()
-//    );
-//    int base64ptr = size;
-//    size += base64_encode((unsigned const char *)req.request.c_str(), req.request.size(), buffer.buffer() + size);
-//    size += sprintf(buffer.buffer() + size, "|");
-//    base64ptr = size;
-//    size += base64_encode((unsigned const char *)_response.response.c_str(), _response.response.size(), buffer.buffer() + size);
-//    size += sprintf(buffer.buffer() + size, "|%lld|%lld|%s", req.upload + req.request.size(), ret_size + _response.response.size(), url.c_str());
-//    _instance->on_task(buffer.buffer());
-//    _requests._reqs.pop_front();
-    remove_conn(ci);
+    on_user_close(ci,0);
 }
 
 void on_user_close(ConnectionInfo* ci, int result_code){
     flog("on_user_close");
-//    if ( ! _requests.is_http() ) return;
-//    if ( _requests._reqs.size() == 0 ) return ;
-//
-//    while ( _requests._reqs.size() ) {
-//
-//        container_l2::smart_buffer<char, 1024 * 20> buffer(_requests._reqs.front().request.size() * 2 + _response.response.size() * 2 + 1024 * 2);
-//
-//        RequestInfo &req = _requests._reqs.front();
-//        protocol3_http::request_decoder req_decoder(get_allocator());
-//        {
-//            container_l2::stream<1000> req_stream;
-//            req_stream.push_back(req.request.c_str(), req.request.size());
-//            container_l2::my_stream_wrapper<1000> wrapper(req_stream);
-//            req_decoder.parse(wrapper);
-//        }
-//        // https or http process
-//        container_l2::string url("");
-//        if ( _use_ssl || _ssl )
-//        {
-//            url.append("https://");
-//        }
-//        else
-//        {
-//            url.append("http://");
-//        }
-//
-//        url.append(protocol3_http::get_val(req_decoder.params(), "Host"));
-//        //����uri�д�http ����https���������
-//        const char *str = req_decoder.query("uri");
-//        char *str1 = strstr(str, "http://");
-//        char *str2 = strstr(str, "https://");
-//        if (str1 || str2) {
-//            url.clear();
-//        }
-//        url.append(str);
-//
-//        const char *error_desc = "success";
-//        switch ( result_code )
-//        {
-//            case -1: error_desc = "Closed By Local";
-//                break;
-//            case -2: error_desc = "Closed By Peer";
-//                break;
-//            case -3: error_desc = strerror(_err_num);
-//                break;
-//            case -4: error_desc = "chunk parse error";
-//                break;
-//            default:
-//                error_desc = strerror(_err_num);
-//                break;
-//        }
-//        protocol3_http::response_decoder & res_decoder = _response._res;
-//        if ( res_decoder.parsed() && res_decoder.trans_mode() == protocol3_http::response_decoder::byclose && (result_code == -2 || result_code == -1) ) {
-//            result_code = 0; error_desc = "success";
-//        }
-//        int size = sprintf(buffer.buffer(), "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|"
-//                , result_code
-//                , error_desc
-//                , req.start_time / 1000
-//                , req.req_end_time / 1000
-//                , req.response_time / 1000
-//                , this->curr_time / 1000
-//                , fd
-//        );
-//        if ( res_decoder.parsed() ) {
-//            size += sprintf(buffer.buffer() + size, "%d", res_decoder.rcode());
-//        }
-//        size += sprintf(buffer.buffer() + size, "|");
-//        size += base64_encode((unsigned const char *)req.request.c_str(), req.request.size(), buffer.buffer() + size);
-//        size += sprintf(buffer.buffer() + size, "|");
-//        size += base64_encode((unsigned const char *)_response.response.c_str(), _response.response.size(), buffer.buffer() + size);
-//        size += sprintf(buffer.buffer() + size, "|%lld|%lld|%s", req.upload + req.request.size(), _response._downsize, url.c_str());
-//
-//        _instance->on_task(buffer.buffer());
-//        _requests._reqs.pop_front();
-//    }
+    if ( ci->reqQueue->requestHeader == 0 ) return ;
+
+    int total = strlen(ci->reqQueue->requestHeader) + strlen(ci->rspQueue->responseHeader)+1024;
+    char* report = (char*)malloc(total);
+    ///URL
+    char* url = "https://";
+    char* host = "host";
+    char* uri = "uri";
+    char* tmp = strstr(uri, host);
+    if (tmp != uri){
+        strcat(url,host);
+    }
+    strcat(url,uri);
+    //ERROR CODE
+    const char *error_desc = "success";
+    switch ( result_code )
+    {
+        case 0:
+            break;
+        case -1: error_desc = "Closed By Local";
+            break;
+        case -2: error_desc = "Closed By Peer";
+            break;
+        case -3: error_desc = strerror(_err_num);
+            break;
+        case -4: error_desc = "chunk parse error";
+            break;
+        default:
+            error_desc = strerror(ci->_err_num);
+            break;
+    }
+
+    int statuscode = 200;
+    char * reqHead = (char *)malloc(strlen(ci->reqQueue->requestHeader)+1);
+    memset(reqHead,0,strlen(ci->reqQueue->requestHeader)+1);
+    base64_encode((const unsigned char *)ci->reqQueue->requestHeader, reqHead, strlen(ci->reqQueue->requestHeader));
+
+    char * rspHead = (char *)malloc(strlen(ci->rspQueue->responseHeader)+1);
+    memset(rspHead,0,strlen(ci->rspQueue->responseHeader)+1);
+    base64_encode((const unsigned char *)ci->rspQueue->responseHeader, rspHead, strlen(ci->rspQueue->responseHeader));
+    /**
+        * 结果|req开始时间,req结束时间,第一次收到response时间,最后一次收到response时间|socket id|状态码|request
+        * headers|response headers|send字节数|recv字节数|URL
+        */
+    int size = sprintf(buffer.buffer(), "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%lld|%s"
+            , result_code
+            , error_desc
+            , ci->reqQueue->req_start_time
+            , ci->reqQueue->req_end_time
+            , ci->rspQueue->rsp_start_time
+            , ci->rspQueue->rsp_end_time
+            , (int)ci->_ssl
+            , statuscode
+            ,reqHead
+            ,rspHead
+            ,ci->reqQueue->_upsize
+            ,ci->rspQueue->_downsize
+            ,url
+    );
+
     remove_conn(ci);
 }
 
@@ -287,7 +205,7 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
     }
 }
 
-void on_read_end(ConnectionInfo *ci, char *buf, UINT64 start_time, int ret){
+void on_read_end(ConnectionInfo *ci, char *buf, int ret){
     flog("----on_read_end----");
     flog(buf);
     if ( ci->connect_end == 0 ) {
@@ -315,7 +233,7 @@ void on_read_end(ConnectionInfo *ci, char *buf, UINT64 start_time, int ret){
 }
 
 
-void on_write_end(ConnectionInfo *ci, char *buf, int len, UINT64 start_time, int ret){
+void on_write_end(ConnectionInfo *ci, char *buf, int len, int ret){
     flog("----on_write_end----");
     flog(buf);
     if ( ci->connect_end == 0 ) {

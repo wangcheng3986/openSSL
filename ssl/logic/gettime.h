@@ -5,7 +5,8 @@
 #ifndef LOGIC_GETTIME_H
 #define LOGIC_GETTIME_H
 
+#include "entity.h"
 
-long long getSysTime();
+int64 getSysTime();
 
 #endif //LOGIC_GETTIME_H
