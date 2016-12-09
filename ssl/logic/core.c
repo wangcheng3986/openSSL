@@ -145,7 +145,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             break;
         case -2: error_desc = "Closed By Peer";
             break;
-        case -3: error_desc = strerror(_err_num);
+        case -3: error_desc = strerror(ci->_err_num);
             break;
         case -4: error_desc = "chunk parse error";
             break;
@@ -166,7 +166,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
         * 结果|req开始时间,req结束时间,第一次收到response时间,最后一次收到response时间|socket id|状态码|request
         * headers|response headers|send字节数|recv字节数|URL
         */
-    int size = sprintf(buffer.buffer(), "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%lld|%s"
+    sprintf(report, "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%lld|%s"
             , result_code
             , error_desc
             , ci->reqQueue->req_start_time
@@ -181,7 +181,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             ,ci->rspQueue->_downsize
             ,url
     );
-
+    flog(report);
     remove_conn(ci);
 }
 
