@@ -4,7 +4,6 @@
 
 #include <stddef.h>
 #include "ReqQueue.h"
-#include "stream.h"
 #include "ReqInfo.h"
 #include "log.h"
 #include<stdio.h>
