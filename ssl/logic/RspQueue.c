@@ -52,6 +52,7 @@ static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
             if(rq->_contentleft<=0){
                 rq->_state = http_end;
             }
+            flog(rq->responseHeader);
         }
     };
 }

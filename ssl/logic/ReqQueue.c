@@ -34,6 +34,7 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
                 strcat(rq->requestHeader,tmp);
             }
             rq->_state = http_content;
+            flog(rq->requestHeader);
         }
     };
 }

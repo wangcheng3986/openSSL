@@ -207,7 +207,7 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
 
 void on_read_end(ConnectionInfo *ci, char *buf, int ret){
     flog("----on_read_end----");
-    flog(buf);
+
 
     int read_size = -1;
     if ( ret > 0 )
@@ -232,7 +232,7 @@ void on_read_end(ConnectionInfo *ci, char *buf, int ret){
 
 void on_write_end(ConnectionInfo *ci, char *buf, int len, int ret){
     flog("----on_write_end----");
-    flog(buf);
+
     int up_size = -1;
     if ( ret > 0 )
     {
