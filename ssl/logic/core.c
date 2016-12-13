@@ -88,13 +88,15 @@ static void on_break(ConnectionInfo *ci)
     on_user_close(ci, -3);
 }
 static void on_up(ConnectionInfo* ci,const char *buf, int len){
-    flog("on_up");
+    char log[256];
+    sprintf(log, "--------on_up------------,%d", (int)ci->_ssl);
+    flog(log);
     push_req(ci->reqQueue,buf, len);
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
     char log[256];
-    sprintf(log, "--------------------,%d", (int)ci->_ssl);
+    sprintf(log, "--------on_down------------,%d", (int)ci->_ssl);
     flog(log);
     push_rsp(ci->rspQueue,buf, len);
     if ( ci->rspQueue->responseHeader != NULL && strlen(ci->rspQueue->responseHeader) > 0 ) {

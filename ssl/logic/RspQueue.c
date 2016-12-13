@@ -28,7 +28,7 @@ void destroy_rsp(ResponseQueue* rsp){
     }
 }
 static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
-    if (rq->responseHeader == NULL){
+    if (rq->responseHeader != NULL){
         return;
     }
     char *tmpStr = buf;
