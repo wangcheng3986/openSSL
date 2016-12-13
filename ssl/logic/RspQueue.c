@@ -63,12 +63,9 @@ static void getheader(ResponseQueue* rq){
 
 
 ResponseQueue* create_rsp(){
-    if(rq != NULL){
-        ResponseQueue* rsp = (ResponseQueue*)malloc(sizeof(ResponseQueue));
-        memset(rsp,0, sizeof(ResponseQueue));
-        return rsp;
-    }
-    return NULL;
+    ResponseQueue* rsp = (ResponseQueue*)malloc(sizeof(ResponseQueue));
+    memset(rsp,0, sizeof(ResponseQueue));
+    return rsp;
 }
 void destroy_rsp(ResponseQueue* rsp){
     if (rsp != NULL){
