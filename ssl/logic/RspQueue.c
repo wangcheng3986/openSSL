@@ -92,7 +92,7 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
         strcpy(rq->strHeader, buf);
         flog(rq->strHeader);
         rq->_state = http_content;
-        getheader(rq->strHeader);
+        getheader(rq);
     }
 
     char log[256];
@@ -112,7 +112,7 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 parse_rsp_head(rq, buf);
                 break;
             case http_content:
-                int64 left = len + rq->_downsize - strlen(rq->strHeader);
+                long left = len + rq->_downsize - strlen(rq->strHeader);
                 if(rq->rspHeader->contentLength == left){
                     flog("http_end------------------");
                 }

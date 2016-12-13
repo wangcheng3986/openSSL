@@ -94,7 +94,7 @@ typedef struct _ResponseQueue {
     char* strHeader;
     int64 rsp_start_time;
     int64 rsp_end_time;
-    int64 _downsize;
+    long _downsize;
     HttpState _state;
 }ResponseQueue;
 
