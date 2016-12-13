@@ -96,7 +96,7 @@ static void on_up(ConnectionInfo* ci,const char *buf, int len){
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
     char log[256];
-    sprintf(log, "--------on_down------------,%d", (int)ci->_ssl);
+    sprintf(log, "--------on_down------------%d", (int)ci->_ssl);
     flog(log);
     push_rsp(ci->rspQueue,buf, len);
     if ( ci->rspQueue->strHeader != NULL && strlen(ci->rspQueue->strHeader) > 0 ) {
@@ -108,7 +108,6 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
                 break;
             case http_end:
                 on_user_close(ci, -4);
-                return;
                 break;
             case http_content:
                 break;
