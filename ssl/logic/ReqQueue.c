@@ -77,9 +77,8 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
     if (rq->strHeader != NULL){
         return;
     }
-    char *tmpStr = buf;
+    char *tmpStr = (char*)buf;
     char *substr = "\r\n";
-    char *ret = NULL;
     while(tmpStr){
         char *s = strstr(tmpStr, substr);
         if (s != NULL){
@@ -100,7 +99,7 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
     }
 
     char log[256];
-    sprintf(log, "--------parse_REQ_head----_state--------,%d", rq->_state);
+    sprintf(log, "--------parse_REQ_head----_state--------%d", rq->_state);
     flog(log);
 }
 

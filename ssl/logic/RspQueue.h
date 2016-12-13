@@ -7,7 +7,7 @@
 
 #include "entity.h"
 
-ResponseQueue* create_rsp(RequestQueue* rq);
+ResponseQueue* create_rsp();
 void push_rsp(ResponseQueue* rq, const char *buf, int len);
 void destroy_rsp(ResponseQueue* rsp);
 

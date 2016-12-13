@@ -56,17 +56,16 @@ static void getheader(ResponseQueue* rq){
         }
     }
     char log[256];
-    sprintf(log, "--------getheader_rsp-----------,%d,%l", rq->rspHeader->scode,rq->rspHeader->contentLength);
+    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->rspHeader->scode,rq->rspHeader->contentLength);
     flog(log);
 }
 
 
 
-ResponseQueue* create_rsp(RequestQueue* rq){
+ResponseQueue* create_rsp(){
     if(rq != NULL){
         ResponseQueue* rsp = (ResponseQueue*)malloc(sizeof(ResponseQueue));
         memset(rsp,0, sizeof(ResponseQueue));
-        rsp->_req = rq;
         return rsp;
     }
     return NULL;
@@ -87,9 +86,8 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
     if (rq->strHeader != NULL){
         return;
     }
-    char *tmpStr = buf;
+    char *tmpStr = (char *)buf;
     char *substr = "\r\n";
-    char *ret = NULL;
     while(tmpStr){
         char *s = strstr(tmpStr, substr);
         if (s != NULL){

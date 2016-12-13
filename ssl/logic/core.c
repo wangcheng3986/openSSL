@@ -31,7 +31,7 @@ ConnectionInfo* get(void* ssl){
             head->connect_end=0;
             head->connect_start=0;
             head->reqQueue = create_req();
-            head->rspQueue = create_rsp(head->reqQueue);
+            head->rspQueue = create_rsp();
             return head;
         }
         head = head->next;
