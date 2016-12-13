@@ -98,7 +98,7 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
     char log[256];
     sprintf(log, "--------on_down------------,%d", (int)ci->_ssl);
     flog(log);
-    push_rsp(ci->rspQueue,buf, len);
+     (ci->rspQueue,buf, len);
     if ( ci->rspQueue->responseHeader != NULL && strlen(ci->rspQueue->responseHeader) > 0 ) {
 
         switch ( ci->rspQueue->_state )

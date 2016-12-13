@@ -68,26 +68,34 @@ typedef enum _HttpState {
 }HttpState;
 
 
+typedef struct _RequestHeader {
+    int protocol;//0get,post
+    char* pa;
+    char* host;
+}ReqHeader;
+
+typedef struct _RspHeader {
+    int scode;
+    long contentLength;
+}RspHeader;
+
 typedef struct _RequestQueue {
-    char* requestHeader;
+    char* strHeader;
+    ReqHeader* reqHeader;
     int64 req_start_time;
     int64 req_end_time;
     int64 _upsize;
     HttpState _state;
-    int64 _contentlength;
-    int statuscode;
 }RequestQueue;
 
 
 typedef struct _ResponseQueue {
-    RequestQueue* _req;
-    char* responseHeader;
+    RspHeader* rspHeader;
+    char* strHeader;
     int64 rsp_start_time;
     int64 rsp_end_time;
     int64 _downsize;
     HttpState _state;
-    int64 _contentleft;
-    int statuscode;
 }ResponseQueue;
 
 typedef struct  _ConnectionInfo{

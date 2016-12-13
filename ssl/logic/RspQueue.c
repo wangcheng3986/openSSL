@@ -4,10 +4,62 @@
 
 #include <stddef.h>
 #include "RspQueue.h"
+#include <string.h>
 #include "log.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
+
+
+// 将str字符以spl分割,存于dst中，并返回子字符串数量
+int split(char dst[][80], char* str, const char* spl)
+{
+    int n = 0;
+    char *result = NULL;
+    result = strtok(str, spl);
+    while( result != NULL )
+    {
+        strcpy(dst[n++], result);
+        result = strtok(NULL, spl);
+    }
+    return n;
+}
+
+static void getheader(ResponseQueue* rq){
+    if(rq->rspHeader == NULL){
+        rq->rspHeader = (RspHeader*)malloc(sizeof(RspHeader));
+        memset(rq->rspHeader, 0, sizeof(RspHeader));
+    }
+    char dst[10][80];
+    int cnt = split(dst, rq->strHeader, "\r\n");
+    for (int i = 0; i < cnt; i++)
+    {
+        flog(dst[i]);
+        char *s = strstr(dst[i], "HTTP/1.1");
+        if(s != NULL){
+            char list[5][80];
+            int ll = split(list, dst[i], " ");
+            if(ll > 2){
+                rq->rspHeader->scode = atoi(list[1]);
+            }
+        }else{
+            s = strstr(dst[i], "Content-Length");
+            if(s != NULL){
+                char list[3][80];
+                int ll = split(list, dst[i], " ");
+                if(ll == 2){
+                    rq->rspHeader->contentLength = atol(list[1]);
+                }
+            }
+        }
+    }
+    char log[256];
+    sprintf(log, "--------getheader_rsp-----------,%d,%l", rq->rspHeader->scode,rq->rspHeader->contentLength);
+    flog(log);
+}
+
+
 
 ResponseQueue* create_rsp(RequestQueue* rq){
     if(rq != NULL){
@@ -20,15 +72,18 @@ ResponseQueue* create_rsp(RequestQueue* rq){
 }
 void destroy_rsp(ResponseQueue* rsp){
     if (rsp != NULL){
-        if(rsp->responseHeader != NULL){
-            free(rsp->responseHeader);
+        if(rsp->strHeader != NULL){
+            free(rsp->strHeader);
+        }
+        if(rsp->rspHeader != NULL){
+            free(rsp->rspHeader);
         }
         free(rsp);
         rsp = NULL;
     }
 }
 static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
-    if (rq->responseHeader != NULL){
+    if (rq->strHeader != NULL){
         return;
     }
     char *tmpStr = buf;
@@ -43,17 +98,18 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
         }
     }
 
-    int headLen = tmpStr - buf - 4;
+    int headLen = tmpStr - buf;
     if(headLen > 0){
-        rq->responseHeader = (char*)malloc(headLen);
-        memset(rq->responseHeader,0, headLen);
-        memcpy(rq->responseHeader, buf, headLen);
-        flog(rq->responseHeader);
+        rq->strHeader = (char*)malloc(headLen);
+        memset(rq->strHeader,0, headLen);
+        memcpy(rq->strHeader, buf, headLen);
+        flog(rq->strHeader);
         rq->_state = http_content;
-        flog("rsp_parse_head");
+        getheader(rq);
     }
+
     char log[256];
-    sprintf(log, "--------on_down------------,%d,%d", headLen,len);
+    sprintf(log, "--------parse_rsp_head----_state--------,%d", rq->_state);
     flog(log);
 }
 
