@@ -12,9 +12,10 @@
 int64 getSysTime(){
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    double tm = (tv.tv_sec) * 1000 + tv.tv_usec/1000;
+    int64 tm = ((int64)tv.tv_sec) * 1000000 + tv.tv_usec;
+
     char buf[256];
-    sprintf(buf, "---tm-----------------%lf--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
+    sprintf(buf, "---tm-----------------%lld--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
     flog(buf);
     return tm;
 }
