@@ -111,11 +111,12 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
             case http_head:
                 parse_rsp_head(rq, buf);
                 break;
-            case http_content:
+            case http_content:{
                 long left = len + rq->_downsize - strlen(rq->strHeader);
                 if(rq->rspHeader->contentLength == left){
                     flog("http_end------------------");
                 }
+            }
                 break;
             case http_end:
                 return ;
