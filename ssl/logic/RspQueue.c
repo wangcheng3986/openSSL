@@ -33,7 +33,8 @@ static void getheader(ResponseQueue* rq){
     }
     char dst[10][80];
     int cnt = split(dst, rq->strHeader, "\r\n");
-    for (int i = 0; i < cnt; i++)
+    int i = 0;
+    for (; i < cnt; i++)
     {
         flog(dst[i]);
         char *s = strstr(dst[i], "HTTP/1.1");
