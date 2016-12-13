@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 
-static void parse_head(RequestQueue* rq,const char *buf, int len);
 
 // 将str字符以spl分割,存于dst中，并返回子字符串数量
 static int split(char dst[][80], char* str, const char* spl)
@@ -78,26 +77,19 @@ static void getheader(RequestQueue* rq){
 }
 
 
-static void parse_head(RequestQueue* rq,const char *buf, int len){
+static void parse_head(RequestQueue* rq,const char *buf){
     if (rq->strHeader != NULL){
         return;
     }
-    char *tmpStr = (char*)buf;
-    char *substr = "\r\n";
-    while(tmpStr){
-        char *s = strstr(tmpStr, substr);
-        if (s != NULL){
-            tmpStr = s+4;
-        }else{
-            break;
-        }
-    }
+    char *substr1 = "HTTP/1.1";
+    char *substr2 = "\r\n";
+    char *s1 = strstr(buf, substr1);
+    char *s2 = strstr(buf, substr2);
 
-    int index = tmpStr - buf - 4;
-    if(index > 0){
-        rq->strHeader = (char*)malloc(index);
-        memset(rq->strHeader,0, index);
-        memcpy(rq->strHeader, buf, index);
+    if(s1 && s2){
+        rq->strHeader = (char*)malloc(strlen(buf)+1);
+        memset(rq->strHeader,0, strlen(buf)+1);
+        strcpy(rq->strHeader, buf);
         flog(rq->strHeader);
         rq->_state = http_content;
         getheader(rq->strHeader);
@@ -143,7 +135,7 @@ void push_req(RequestQueue* rq, const char *buf, int len){
     {
         case http_head:{
             flog("push_req:Protocol_head");
-            parse_head(rq, buf, len);
+            parse_head(rq, buf);
             break;
         }
         case http_content:

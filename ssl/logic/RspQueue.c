@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
-
 
 // 将str字符以spl分割,存于dst中，并返回子字符串数量
 static int split(char dst[][80], char* str, const char* spl)
@@ -79,33 +77,26 @@ void destroy_rsp(ResponseQueue* rsp){
         rsp = NULL;
     }
 }
-static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
+static void parse_rsp_head(ResponseQueue* rq, const char *buf){
     if (rq->strHeader != NULL){
         return;
     }
-    char *tmpStr = (char *)buf;
-    char *substr = "\r\n";
-    while(tmpStr){
-        char *s = strstr(tmpStr, substr);
-        if (s != NULL){
-            tmpStr = s+4;
-        }else{
-            break;
-        }
-    }
+    char *substr1 = "HTTP/1.1";
+    char *substr2 = "\r\n";
+    char *s1 = strstr(buf, substr1);
+    char *s2 = strstr(buf, substr2);
 
-    int headLen = tmpStr - buf;
-    if(headLen > 0){
-        rq->strHeader = (char*)malloc(headLen);
-        memset(rq->strHeader,0, headLen);
-        memcpy(rq->strHeader, buf, headLen);
+    if(s1 && s2){
+        rq->strHeader = (char*)malloc(strlen(buf)+1);
+        memset(rq->strHeader,0, strlen(buf)+1);
+        strcpy(rq->strHeader, buf);
         flog(rq->strHeader);
         rq->_state = http_content;
-        getheader(rq);
+        getheader(rq->strHeader);
     }
 
     char log[256];
-    sprintf(log, "--------parse_rsp_head----_state--------,%d", rq->_state);
+    sprintf(log, "--------parse_REQ_head----_state--------%d", rq->_state);
     flog(log);
 }
 
@@ -118,9 +109,13 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
         switch ( rq->_state )
         {
             case http_head:
-                parse_rsp_head(rq, buf, len);
+                parse_rsp_head(rq, buf);
                 break;
             case http_content:
+                int64 left = len + rq->_downsize - strlen(rq->strHeader);
+                if(rq->rspHeader->contentLength == left){
+                    flog("http_end------------------");
+                }
                 break;
             case http_end:
                 return ;
