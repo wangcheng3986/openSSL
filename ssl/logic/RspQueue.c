@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 #include "RspQueue.h"
+#include "log.h"
 
 
 static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
@@ -27,34 +28,32 @@ void destroy_rsp(ResponseQueue* rsp){
     }
 }
 static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
+    char *tmpStr = buf;
     char *substr = "\r\n";
-    char *s = strstr(buf, substr);
-    if(s == NULL){
-        if (rq->responseHeader == 0){
-            rq->responseHeader = (char*)malloc(len);
-            memcpy(rq->responseHeader,buf,len);
+    char *ret = NULL;
+    while(tmpStr){
+        char *s = strstr(tmpStr, substr);
+        if (s != NULL){
+            tmpStr = s+4;
         }else{
-            strcat(rq->responseHeader,buf);
+            break;
         }
-    }else{
-        int offset = s- buf;
-        if(offset > 0){
-            int size = strlen(buf)- strlen(s);
-            char* tmp = (char*)malloc(size);
-            memcpy(tmp,buf,size);
-            if (rq->responseHeader == 0){
-                rq->responseHeader = tmp;
-            }else{
-                strcat(rq->responseHeader,tmp);
+    }
+    flog("rsp_parse_head");
+    int index = tmpStr - buf - 3;
+    if(index > 0){
+        if (rq->responseHeader == 0){
+            rq->responseHeader = (char*)malloc(2000);
+            memset(rq->responseHeader,0, 2000);
+            memcpy(rq->responseHeader, buf, index);
+        }else{
+            int exist = strlen(rq->responseHeader) - 1;
+            if(exist+index < 2000){
+                memcpy(rq->responseHeader + exist, buf, index);
             }
-            rq->_state = http_content;
-            rq->_contentleft = rq->_req->_contentlength - strlen(s)+ 4;
-            if(rq->_contentleft<=0){
-                rq->_state = http_end;
-            }
-            flog(rq->responseHeader);
         }
-    };
+        flog(rq->responseHeader);
+    }
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){

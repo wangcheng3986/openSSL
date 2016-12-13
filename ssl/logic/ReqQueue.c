@@ -13,30 +13,28 @@ static int parsed(RequestQueue* rq);
 
 
 static void parse_head(RequestQueue* rq,const char *buf, int len){
+    char *tmpStr = buf;
     char *substr = "\r\n";
-    char *s = strstr(buf, substr);
-    if(s == NULL){
-        if (rq->requestHeader == 0){
-            rq->requestHeader = (char*)malloc(len);
-            memcpy(rq->requestHeader,buf,len);
+    char *ret = NULL;
+    while(tmpStr){
+        char *s = strstr(tmpStr, substr);
+        if (s != NULL){
+            tmpStr = s+4;
         }else{
-            strcat(rq->requestHeader,buf);
+            break;
         }
-    }else{
-        int offset = s- buf;
-        if(offset > 0){
-            int size = strlen(buf)- strlen(s);
-            char* tmp = (char*)malloc(size);
-            memcpy(tmp,buf,size);
-            if (rq->requestHeader == 0){
-                rq->requestHeader = tmp;
-            }else{
-                strcat(rq->requestHeader,tmp);
-            }
-            rq->_state = http_content;
-            flog(rq->requestHeader);
+    }
+    flog("req_parse_head");
+    int index = tmpStr - buf - 3;
+    if(index > 0){
+        if (rq->requestHeader == 0){
+            free(rq->requestHeader);
         }
-    };
+        rq->requestHeader = (char*)malloc(index);
+        memset(rq->requestHeader,0, index);
+        memcpy(rq->requestHeader, buf, index);
+        flog(rq->requestHeader);
+    }
 }
 
 

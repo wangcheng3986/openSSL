@@ -75,17 +75,20 @@ typedef struct _RequestQueue {
     int64 _upsize;
     HttpState _state;
     int64 _contentlength;
+    int statuscode;
 }RequestQueue;
 
 
 typedef struct _ResponseQueue {
     RequestQueue* _req;
+    char* _cache;
     char* responseHeader;
     int64 rsp_start_time;
     int64 rsp_end_time;
     int64 _downsize;
     HttpState _state;
     int64 _contentleft;
+    int statuscode;
 }ResponseQueue;
 
 typedef struct  _ConnectionInfo{
