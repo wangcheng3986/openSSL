@@ -24,21 +24,18 @@ static int split(char dst[][80], char* str, const char* spl)
 }
 
 static void getheader(RequestQueue* rq){
-    flog("getheader--0000000000");
     if(rq->reqHeader == NULL){
         rq->reqHeader = (ReqHeader*)malloc(sizeof(ReqHeader));
         memset(rq->reqHeader, 0, sizeof(ReqHeader));
     }
     char dst[10][80];
     int cnt = split(dst, rq->strHeader, "\r\n");
-    flog("getheader--11111111111");
     int i = 0;
     for (; i < cnt; i++)
     {
         flog(dst[i]);
         char *s = strstr(dst[i], "GET");
         if(s != NULL){
-            flog("getheader--222222222");
             rq->reqHeader->protocol = 0;
             char list[3][80];
             int ll = split(list, dst[i], " ");
@@ -48,7 +45,6 @@ static void getheader(RequestQueue* rq){
                 flog(rq->reqHeader->pa);
             }
         }else{
-            flog("getheader--33333333333333");
             s = strstr(dst[i], "POST");
             if(s != NULL){
                 rq->reqHeader->protocol = 1;
@@ -61,7 +57,6 @@ static void getheader(RequestQueue* rq){
                 }
             }
         }
-        flog("getheader--44444444444");
         s = strstr(dst[i], "Host");
         if(s != NULL){
             char list[2][80];
@@ -73,7 +68,6 @@ static void getheader(RequestQueue* rq){
             }
         }
     }
-    flog("getheader--99999999999");
 }
 
 
