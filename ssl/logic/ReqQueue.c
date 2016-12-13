@@ -25,7 +25,7 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
         }
     }
     flog("req_parse_head");
-    int index = tmpStr - buf - 3;
+    int index = tmpStr - buf;
     if(index > 0){
         if (rq->requestHeader != NULL){
             free(rq->requestHeader);
@@ -34,6 +34,7 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
         memset(rq->requestHeader,0, index);
         memcpy(rq->requestHeader, buf, index);
         flog(rq->requestHeader);
+        rq->_state = http_content;
     }
 }
 

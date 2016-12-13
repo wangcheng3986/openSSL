@@ -44,19 +44,13 @@ static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
     flog("rsp_parse_head:");
     if(offLen > 0){
         if (rq->responseHeader == NULL){
-            flog("rsp_parse_head:1");
-            rq->responseHeader = (char*)malloc(2000);
-            memset(rq->responseHeader,0, 2000);
-            memcpy(rq->responseHeader, buf, index);
-        }else{
-            flog("rsp_parse_head:2");
-            flog(rq->responseHeader);
-            int exist = strlen(rq->responseHeader);
-            if(exist+index < 2000){
-                memcpy(rq->responseHeader + exist, buf, index);
-            }
+            free(rq->responseHeader);
         }
+        rq->responseHeader = (char*)malloc(offLen);
+        memset(rq->responseHeader,0, offLen);
+        memcpy(rq->responseHeader, buf, offLen);
         flog(rq->responseHeader);
+        rq->_state = http_content;
     }
 }
 
