@@ -93,6 +93,9 @@ static void on_up(ConnectionInfo* ci,const char *buf, int len){
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
+    char log[256];
+    sprintf(log, "--------------------,%d", (int)ci->_ssl);
+    flog(log);
     push_rsp(ci->rspQueue,buf, len);
     if ( ci->rspQueue->responseHeader != NULL && strlen(ci->rspQueue->responseHeader) > 0 ) {
 

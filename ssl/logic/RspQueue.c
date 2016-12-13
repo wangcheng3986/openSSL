@@ -7,7 +7,7 @@
 #include "log.h"
 
 
-static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
+static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
 
 ResponseQueue* create_rsp(RequestQueue* rq){
     if(rq != NULL){
@@ -27,7 +27,10 @@ void destroy_rsp(ResponseQueue* rsp){
         rsp = NULL;
     }
 }
-static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
+static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
+    if (rq->responseHeader == NULL){
+        return;
+    }
     char *tmpStr = buf;
     char *substr = "\r\n";
     char *ret = NULL;
@@ -55,6 +58,7 @@ static int parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
+
     if(rq!= NULL){
         switch ( rq->_state )
         {
