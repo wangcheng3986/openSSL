@@ -27,7 +27,7 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
     flog("req_parse_head");
     int index = tmpStr - buf - 3;
     if(index > 0){
-        if (rq->requestHeader == 0){
+        if (rq->requestHeader != NULL){
             free(rq->requestHeader);
         }
         rq->requestHeader = (char*)malloc(index);

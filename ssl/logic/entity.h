@@ -81,7 +81,6 @@ typedef struct _RequestQueue {
 
 typedef struct _ResponseQueue {
     RequestQueue* _req;
-    char* _cache;
     char* responseHeader;
     int64 rsp_start_time;
     int64 rsp_end_time;
