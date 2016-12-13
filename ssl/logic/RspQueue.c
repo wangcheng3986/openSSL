@@ -13,7 +13,7 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len);
 
 
 // 将str字符以spl分割,存于dst中，并返回子字符串数量
-int split(char dst[][80], char* str, const char* spl)
+static int split(char dst[][80], char* str, const char* spl)
 {
     int n = 0;
     char *result = NULL;
