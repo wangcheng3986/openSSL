@@ -13,6 +13,9 @@ static int parsed(RequestQueue* rq);
 
 
 static void parse_head(RequestQueue* rq,const char *buf, int len){
+    if (rq->requestHeader != NULL){
+        return;
+    }
     char *tmpStr = buf;
     char *substr = "\r\n";
     char *ret = NULL;
@@ -24,17 +27,15 @@ static void parse_head(RequestQueue* rq,const char *buf, int len){
             break;
         }
     }
-    flog("req_parse_head");
-    int index = tmpStr - buf;
+
+    int index = tmpStr - buf - 4;
     if(index > 0){
-        if (rq->requestHeader != NULL){
-            free(rq->requestHeader);
-        }
         rq->requestHeader = (char*)malloc(index);
         memset(rq->requestHeader,0, index);
         memcpy(rq->requestHeader, buf, index);
         flog(rq->requestHeader);
         rq->_state = http_content;
+        flog("req_parse_head");
     }
 }
 

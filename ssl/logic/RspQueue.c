@@ -43,23 +43,26 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf, int len){
         }
     }
 
-    int offLen = tmpStr - buf;
-    flog("rsp_parse_head:");
-    if(offLen > 0){
-        if (rq->responseHeader == NULL){
-            free(rq->responseHeader);
-        }
-        rq->responseHeader = (char*)malloc(offLen);
-        memset(rq->responseHeader,0, offLen);
-        memcpy(rq->responseHeader, buf, offLen);
+    int headLen = tmpStr - buf - 4;
+    if(headLen > 0){
+        rq->responseHeader = (char*)malloc(headLen);
+        memset(rq->responseHeader,0, headLen);
+        memcpy(rq->responseHeader, buf, headLen);
         flog(rq->responseHeader);
         rq->_state = http_content;
+        flog("rsp_parse_head");
     }
+    char log[256];
+    sprintf(log, "--------on_down------------,%d,%d", headLen,len);
+    flog(log);
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
 
     if(rq!= NULL){
+        char log[256];
+        sprintf(log, "--------push_rsp------------,%d",len);
+        flog(log);
         switch ( rq->_state )
         {
             case http_head:
