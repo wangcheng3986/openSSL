@@ -22,10 +22,12 @@ static void remove_conn(ConnectionInfo * ci);
 
 
 ConnectionInfo* get(void* ssl){
+    flog("get ConnectionInfo");
     ConnectionInfo* head = _SSLConnectionList;
     ConnectionInfo* tail = head;
     while (head){
         if(head->_ssl == ssl){
+            flog("get old ConnectionInfo");
             return head;
         }
         head = head->next;
@@ -44,7 +46,7 @@ ConnectionInfo* get(void* ssl){
     }else{
         tail->next = ci;
     }
-
+    flog("get new ConnectionInfo");
     return ci;
 }
 
@@ -95,8 +97,11 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
     sprintf(log, "--------on_down------------%d", (int)ci->_ssl);
     flog(log);
     push_rsp(ci->rspQueue,buf, len);
+    flog("on_down-1");
     if ( ci->rspQueue->strHeader != NULL && strlen(ci->rspQueue->strHeader) > 0 ) {
-
+        char log[256];
+        sprintf(log, "--------on_down----_state--------%d", rq->_state);
+        flog(log);
         switch ( ci->rspQueue->_state )
         {
             case http_head:
@@ -111,6 +116,7 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
                 break;
         }
     }
+    flog("on_down-end");
 }
 
 

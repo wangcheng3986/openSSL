@@ -93,10 +93,6 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
         rq->_state = http_content;
         getheader(rq);
     }
-
-    char log[256];
-    sprintf(log, "--------parse_REQ_head----_state--------%d", rq->_state);
-    flog(log);
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
