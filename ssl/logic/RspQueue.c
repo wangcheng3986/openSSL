@@ -29,33 +29,33 @@ static void getheader(ResponseQueue* rq){
         rq->rspHeader = (RspHeader*)malloc(sizeof(RspHeader));
         memset(rq->rspHeader, 0, sizeof(RspHeader));
     }
-    char dst[10][80];
-    int cnt = split(dst, rq->strHeader, "\r\n");
-    int i = 0;
-    for (; i < cnt; i++)
-    {
-        flog(dst[i]);
-        char *s = strstr(dst[i], "HTTP/1.1");
-        if(s != NULL){
-            char list[5][80];
-            int ll = split(list, dst[i], " ");
-            if(ll > 2){
-                rq->rspHeader->scode = atoi(list[1]);
-            }
-        }else{
-            s = strstr(dst[i], "Content-Length");
-            if(s != NULL){
-                char list[3][80];
-                int ll = split(list, dst[i], " ");
-                if(ll == 2){
-                    rq->rspHeader->contentLength = atol(list[1]);
-                }
-            }
-        }
-    }
-    char log[256];
-    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->rspHeader->scode,rq->rspHeader->contentLength);
-    flog(log);
+//    char dst[10][80];
+//    int cnt = split(dst, rq->strHeader, "\r\n");
+//    int i = 0;
+//    for (; i < cnt; i++)
+//    {
+//        flog(dst[i]);
+//        char *s = strstr(dst[i], "HTTP/1.1");
+//        if(s != NULL){
+//            char list[5][80];
+//            int ll = split(list, dst[i], " ");
+//            if(ll > 2){
+//                rq->rspHeader->scode = atoi(list[1]);
+//            }
+//        }else{
+//            s = strstr(dst[i], "Content-Length");
+//            if(s != NULL){
+//                char list[3][80];
+//                int ll = split(list, dst[i], " ");
+//                if(ll == 2){
+//                    rq->rspHeader->contentLength = atol(list[1]);
+//                }
+//            }
+//        }
+//    }
+//    char log[256];
+//    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->rspHeader->scode,rq->rspHeader->contentLength);
+//    flog(log);
 }
 
 
