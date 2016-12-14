@@ -34,6 +34,7 @@ static void getheader(ResponseQueue* rq){
     int i = 0;
     for (; i < cnt; i++)
     {
+        flog(dst[i]);
         char *s = strstr(dst[i], "HTTP/1.1");
         if(s != NULL){
             char list[5][80];
@@ -86,12 +87,13 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
     char *s2 = strstr(buf, substr2);
 
     if(s1 && s2){
+
         rq->strHeader = (char*)malloc(strlen(buf)+1);
         memset(rq->strHeader,0, strlen(buf)+1);
         strcpy(rq->strHeader, buf);
         flog(rq->strHeader);
         rq->_state = http_content;
-       // getheader(rq);
+        getheader(rq);
     }
 }
 
@@ -105,11 +107,11 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
-//                assert(rq->strHeader != NULL);
-//                long left = len + rq->_downsize - strlen(rq->strHeader);
-//                if(rq->rspHeader->contentLength == left){
-//                    flog("http_end------------------");
-//                }
+                assert(rq->strHeader != NULL);
+                long left = len + rq->_downsize - strlen(rq->strHeader);
+                if(rq->rspHeader!= NULL && rq->rspHeader->contentLength >= left){
+                    flog("http_end------------------");
+                }
             }
                 break;
             case http_end:
