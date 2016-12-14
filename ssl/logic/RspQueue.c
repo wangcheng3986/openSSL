@@ -91,7 +91,7 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
         strcpy(rq->strHeader, buf);
         flog(rq->strHeader);
         rq->_state = http_content;
-        getheader(rq);
+       // getheader(rq);
     }
 }
 
@@ -111,7 +111,6 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
             }
                 break;
             case http_end:
-                return ;
                 break;
         }
         rq->_downsize += len;
