@@ -14,8 +14,8 @@ int64 getSysTime(){
     gettimeofday(&tv, NULL);
     int64 tm = ((int64)tv.tv_sec) * 1000000 + tv.tv_usec;
 
-    char buf[256];
-    sprintf(buf, "---tm-----------------%lld--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
-    flog(buf);
+//    char buf[256];
+//    sprintf(buf, "---tm-----------------%lld--%ld,%ld", tm,  tv.tv_sec,tv.tv_usec);
+//    flog(buf);
     return tm;
 }

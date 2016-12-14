@@ -96,7 +96,7 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
-
+    flog("push_rsp");
     if(rq!= NULL){
         switch ( rq->_state )
         {
@@ -104,6 +104,7 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 parse_rsp_head(rq, buf);
                 break;
             case http_content:{
+                flog("push_rsp--http_content");
                 long left = len + rq->_downsize - strlen(rq->strHeader);
                 if(rq->rspHeader->contentLength == left){
                     flog("http_end------------------");
