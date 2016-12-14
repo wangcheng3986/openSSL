@@ -74,11 +74,6 @@ typedef struct _RequestHeader {
     char* host;
 }ReqHeader;
 
-typedef struct _RspHeader {
-    int scode;
-    long contentLength;
-}RspHeader;
-
 typedef struct _RequestQueue {
     char* strHeader;
     ReqHeader* reqHeader;
@@ -90,11 +85,12 @@ typedef struct _RequestQueue {
 
 
 typedef struct _ResponseQueue {
-    RspHeader* rspHeader;
     char* strHeader;
     int64 rsp_start_time;
     int64 rsp_end_time;
     long _downsize;
+    int scode;
+    long contentLength;
     HttpState _state;
 }ResponseQueue;
 

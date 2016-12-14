@@ -183,7 +183,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             , ci->rspQueue->rsp_start_time
             , ci->rspQueue->rsp_end_time
             , (int)ci->_ssl
-            , ci->rspQueue->rspHeader->scode
+            , ci->rspQueue->scode
             ,reqHead
             ,rspHead
             ,ci->reqQueue->_upsize
