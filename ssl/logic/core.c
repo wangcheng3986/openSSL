@@ -22,12 +22,10 @@ static void remove_conn(ConnectionInfo * ci);
 
 
 ConnectionInfo* get(void* ssl){
-    flog("get ConnectionInfo");
     ConnectionInfo* head = _SSLConnectionList;
     ConnectionInfo* tail = head;
     while (head){
         if(head->_ssl == ssl){
-            flog("get old ConnectionInfo");
             return head;
         }
         head = head->next;
@@ -97,10 +95,9 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
         switch ( ci->rspQueue->_state )
         {
             case http_head:
-                report(ci);
                 break;
             case http_end:
-                on_user_close(ci, -4);
+                report(ci);
                 break;
             case http_content:
                 break;
@@ -185,6 +182,9 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             ,ci->rspQueue->_downsize
             ,url
     );
+    flog(ci->reqQueue->strHeader);
+
+    flog(ci->rspQueue->strHeader);
     flog(report);
     remove_conn(ci);
     flog("on_user_close--end");
@@ -211,9 +211,6 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
 }
 
 void on_read_end(ConnectionInfo *ci, char *buf, int ret){
-    flog("----on_read_end----");
-
-
     int read_size = -1;
     if ( ret > 0 )
     {
@@ -236,8 +233,6 @@ void on_read_end(ConnectionInfo *ci, char *buf, int ret){
 
 
 void on_write_end(ConnectionInfo *ci, char *buf, int len, int ret){
-    flog("----on_write_end----");
-
     int up_size = -1;
     if ( ret > 0 )
     {

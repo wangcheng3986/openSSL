@@ -9,25 +9,19 @@
 #include "log.h"
 
 void handle_ssl_new(SSL_NEW* data,long id){
-    flog("handle_ssl_new");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ret);
         ci->_ssl = data->_ret;
     }
-
-    flog("handle_ssl_new1");
 }
 void handle_ssl_free(SSL_FREE* data,long id){
-    flog("handle_ssl_free");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         on_connect_finished(ci,-1);
         on_user_close(ci,-1);
     }
-    flog("handle_ssl_free1");
 }
 void handle_ssl_connect(SSL_CONNECT* data,long id){
-    flog("handle_ssl_connect");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if ( ci->connect_start == 0 )
@@ -37,10 +31,8 @@ void handle_ssl_connect(SSL_CONNECT* data,long id){
             on_connect_finished(ci, 0);
         }
     }
-    flog("handle_ssl_connect1");
 }
 void handle_ssl_read(SSL_READ* data,long id){
-    flog("handle_ssl_read");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if (ci->rspQueue->rsp_start_time == 0){
@@ -51,10 +43,8 @@ void handle_ssl_read(SSL_READ* data,long id){
         }
         on_read_end(ci, (char*)data->_buf, data->_ret);
     }
-    flog("handle_ssl_read1");
 }
 void handle_ssl_write(SSL_WRITE* data,long id){
-    flog("handle_ssl_write");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if (ci->reqQueue->req_start_time == 0){
@@ -65,5 +55,4 @@ void handle_ssl_write(SSL_WRITE* data,long id){
         }
         on_write_end(ci, (char*)data->_buf, data->_len, data->_ret);
     }
-    flog("handle_ssl_write1");
 }

@@ -86,6 +86,7 @@ static void parse_head(RequestQueue* rq,const char *buf){
         flog(rq->strHeader);
         rq->_state = http_content;
         getheader(rq);
+        flog(rq->strHeader);
     }
 
     char log[256];
