@@ -88,22 +88,12 @@ static void on_break(ConnectionInfo *ci)
     on_user_close(ci, -3);
 }
 static void on_up(ConnectionInfo* ci,const char *buf, int len){
-    char log[256];
-    sprintf(log, "--------on_up------------,%d", (int)ci->_ssl);
-    flog(log);
     push_req(ci->reqQueue,buf, len);
 }
 
 static void on_down(ConnectionInfo* ci, const char *buf, int len){
-    char log[256];
-    sprintf(log, "--------on_down------------%d", (int)ci->_ssl);
-    flog(log);
     push_rsp(ci->rspQueue,buf, len);
-    flog("on_down-1");
     if ( ci->rspQueue->strHeader != NULL && strlen(ci->rspQueue->strHeader) > 0 ) {
-        char log[256];
-        sprintf(log, "--------on_down----_state--------%d", ci->rspQueue->_state);
-        flog(log);
         switch ( ci->rspQueue->_state )
         {
             case http_head:
@@ -118,13 +108,11 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
                 break;
         }
     }
-    flog("on_down-end");
 }
 
 
 
 static void report(ConnectionInfo* ci){
-    flog("report");
     on_user_close(ci,0);
 }
 
@@ -137,6 +125,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     ///URL
     flog("on_user_close--------2");
     char url[80];
+    memset(url,0,80);
     strcat(url,"https://");
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
     flog(strcat);
@@ -169,13 +158,13 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             break;
     }
     flog("on_user_close2");
-    char * reqHead = (char *)malloc(strlen(ci->reqQueue->strHeader)+1);
-    memset(reqHead,0,strlen(ci->reqQueue->strHeader)+1);
-    base64_encode((const unsigned char *)ci->reqQueue->strHeader, reqHead, strlen(ci->reqQueue->strHeader));
-
-    char * rspHead = (char *)malloc(strlen(ci->rspQueue->strHeader)+1);
-    memset(rspHead,0,strlen(ci->rspQueue->strHeader)+1);
-    base64_encode((const unsigned char *)ci->rspQueue->strHeader, rspHead, strlen(ci->rspQueue->strHeader));
+//    char * reqHead = (char *)malloc(strlen(ci->reqQueue->strHeader)+1);
+//    memset(reqHead,0,strlen(ci->reqQueue->strHeader)+1);
+//    base64_encode((const unsigned char *)ci->reqQueue->strHeader, reqHead, strlen(ci->reqQueue->strHeader));
+//
+//    char * rspHead = (char *)malloc(strlen(ci->rspQueue->strHeader)+1);
+//    memset(rspHead,0,strlen(ci->rspQueue->strHeader)+1);
+//    base64_encode((const unsigned char *)ci->rspQueue->strHeader, rspHead, strlen(ci->rspQueue->strHeader));
     /**
         * 结果|req开始时间,req结束时间,第一次收到response时间,最后一次收到response时间|socket id|状态码|request
         * headers|response headers|send字节数|recv字节数|URL
@@ -190,8 +179,8 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             , ci->rspQueue->rsp_end_time
             , (int)ci->_ssl
             , ci->rspQueue->scode
-            ,reqHead
-            ,rspHead
+            ,ci->reqQueue->strHeader
+            ,ci->rspQueue->strHeader
             ,ci->reqQueue->_upsize
             ,ci->rspQueue->_downsize
             ,url
