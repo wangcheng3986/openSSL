@@ -34,7 +34,6 @@ static void getheader(ResponseQueue* rq){
     int i = 0;
     for (; i < cnt; i++)
     {
-        flog(dst[i]);
         char *s = strstr(dst[i], "HTTP/1.1");
         if(s != NULL){
             char list[5][80];
@@ -103,9 +102,6 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
 
     if(rq!= NULL){
-        char log[256];
-        sprintf(log, "--------push_rsp------------,%d",len);
-        flog(log);
         switch ( rq->_state )
         {
             case http_head:
@@ -123,5 +119,9 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
         }
         rq->_downsize += len;
+
+        char log[256];
+        sprintf(log, "--------push_rsp------------%ld,%d",rq->_downsize,len);
+        flog(log);
     }
 }

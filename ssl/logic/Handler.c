@@ -10,24 +10,18 @@
 
 void handle_ssl_new(SSL_NEW* data){
     if(data != NULL){
-        flog("handle_ssl_new");
         ConnectionInfo* ci = get(data->_ret);
         ci->_ssl = data->_ret;
-        if(ci->preProcess){
-            flog(ci->preProcess);
-        }
+        flog(ci->preProcess);
         ci->preProcess = "handle_ssl_new";
     }
 }
 void handle_ssl_free(SSL_FREE* data){
     if(data != NULL){
-
         ConnectionInfo* ci = get(data->_ssl);
         on_connect_finished(ci,-1);
         on_user_close(ci,-1);
-        if(ci->preProcess){
-            flog(ci->preProcess);
-        }
+        flog(ci->preProcess);
         ci->preProcess = "handle_ssl_free";
     }
 
@@ -41,9 +35,7 @@ void handle_ssl_connect(SSL_CONNECT* data){
             ci->connect_end = data->_end_time;
             on_connect_finished(ci, 0);
         }
-        if(ci->preProcess){
-            flog(ci->preProcess);
-        }
+        flog(ci->preProcess);
         ci->preProcess = "handle_ssl_connect";
     }
 
@@ -58,9 +50,7 @@ void handle_ssl_read(SSL_READ* data){
             ci->rspQueue->rsp_end_time = data->_end_time;
         }
         on_read_end(ci, (char*)data->_buf, data->_ret);
-        if(ci->preProcess){
-            flog(ci->preProcess);
-        }
+        flog(ci->preProcess);
         ci->preProcess = "handle_ssl_read";
     }
 }
@@ -74,9 +64,7 @@ void handle_ssl_write(SSL_WRITE* data){
             ci->reqQueue->req_end_time = data->_end_time;
         }
         on_write_end(ci, (char*)data->_buf, data->_len, data->_ret);
-        if(ci->preProcess){
-            flog(ci->preProcess);
-        }
+        flog(ci->preProcess);
         ci->preProcess = "handle_ssl_write";
     }
 }

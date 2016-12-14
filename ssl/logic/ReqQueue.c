@@ -33,7 +33,6 @@ static void getheader(RequestQueue* rq){
     int i = 0;
     for (; i < cnt; i++)
     {
-        flog(dst[i]);
         char *s = strstr(dst[i], "GET");
         if(s != NULL){
             rq->reqHeader->protocol = 0;

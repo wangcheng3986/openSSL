@@ -26,12 +26,6 @@ ConnectionInfo* get(void* ssl){
     ConnectionInfo* tail = head;
     while (head){
         if(head->_ssl == ssl){
-            head->_connected= 0;
-            head->_err_num=0;
-            head->connect_end=0;
-            head->connect_start=0;
-            head->reqQueue = create_req();
-            head->rspQueue = create_rsp();
             return head;
         }
         head = head->next;
@@ -42,6 +36,13 @@ ConnectionInfo* get(void* ssl){
     ConnectionInfo* ci = (ConnectionInfo*)malloc(sizeof(ConnectionInfo));
     memset(ci,0, sizeof(ConnectionInfo));
     ci->_ssl = ssl;
+    ci->_connected= 0;
+    ci->_err_num=0;
+    ci->connect_end=0;
+    ci->connect_start=0;
+    ci->reqQueue = create_req();
+    ci->rspQueue = create_rsp();
+    ci->preProcess= "none";
     ci->next = NULL;
     if(_SSLConnectionList == NULL){
         _SSLConnectionList = ci;
