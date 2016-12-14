@@ -90,7 +90,6 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){
-    flog("push_rsp");
     if(rq!= NULL){
         switch ( rq->_state )
         {
@@ -106,11 +105,11 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
         }
         rq->_downsize += len;
         if(rq->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
-            flog("http_end------------------");
             rq->_state = http_end;
         }
+        int sz = strlen(rq->strHeader);
         char log[256];
-        sprintf(log, "--------push_rsp------------%ld,%d",rq->_downsize,len);
+        sprintf(log, "--------push_rsp------------%ld,%ld,%d",rq->contentLength,rq->_downsize,sz);
         flog(log);
     }
 }

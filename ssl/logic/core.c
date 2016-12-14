@@ -139,7 +139,10 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     char url[80];
     strcat(url,"https://");
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
+    flog(strcat);
     flog("on_user_close--------3");
+    flog(ci->reqQueue->reqHeader->pa);
+    flog(ci->reqQueue->reqHeader->host);
     if (tmp != ci->reqQueue->reqHeader->pa){
         flog("on_user_close--------4");
         strcat(url,ci->reqQueue->reqHeader->host);
