@@ -95,21 +95,25 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
         {
             case http_head:
                 parse_rsp_head(rq, buf);
+                rq->left = rq->contentLength;
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
+                if(rq->left > 0){
+                    rq->left -= len;
+                    if(rq->left <= 0 ){
+                        rq->_state = http_end;
+                    }
+                }
             }
                 break;
             case http_end:
                 break;
         }
         rq->_downsize += len;
-        if(rq->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
-            rq->_state = http_end;
-        }
-        int sz = strlen(rq->strHeader);
+
         char log[256];
-        sprintf(log, "--------push_rsp------------%ld,%ld,%d",rq->contentLength,rq->_downsize,sz);
+        sprintf(log, "--------push_rsp------------%ld,%ld,%d",rq->contentLength,rq->_downsize,rq->left);
         flog(log);
     }
 }

@@ -91,6 +91,7 @@ typedef struct _ResponseQueue {
     long _downsize;
     int scode;
     long contentLength;
+    long left;
     HttpState _state;
 }ResponseQueue;
 
