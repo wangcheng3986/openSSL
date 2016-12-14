@@ -28,18 +28,18 @@ static void getheader(ResponseQueue* rq){
     char dst[10][80];
     int cnt = split(dst, rq->strHeader, "\r\n");
 
-    char *s = strstr(dst[0], "HTTP/1.1");
-    if(s != NULL){
-        char list[5][80];
-        int ll = split(list, dst[0], " ");
-        if(ll > 2){
-            rq->scode = atoi(list[1]);
-        }
-    }
-//    int i = 1;
-//    for (; i < cnt; i++)
-//    {
-//        flog(dst[i]);
+//    char *s = strstr(dst[0], "HTTP/1.1");
+//    if(s != NULL){
+//        char list[5][80];
+//        int ll = split(list, dst[0], " ");
+//        if(ll > 2){
+//            rq->scode = atoi(list[1]);
+//        }
+//    }
+    int i = 1;
+    for (; i < cnt; i++)
+    {
+        flog(dst[i]);
 //        char *s = strstr(dst[i], "Content-Length");
 //        if(s != NULL){
 //            char list[3][80];
@@ -49,7 +49,7 @@ static void getheader(ResponseQueue* rq){
 //                break;
 //            }
 //        }
-//    }
+    }
     char log[80];
     sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->scode,rq->contentLength);
     flog(log);
