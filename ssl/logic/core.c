@@ -129,15 +129,19 @@ static void report(ConnectionInfo* ci){
 void on_user_close(ConnectionInfo* ci, int result_code){
     flog("on_user_close");
     if ( ci->reqQueue->strHeader == 0 ) return ;
-
+    flog("on_user_close--------1");
     int total = strlen(ci->reqQueue->strHeader) + strlen(ci->rspQueue->strHeader)+1024;
     char* report = (char*)malloc(total);
     ///URL
+    flog("on_user_close--------2");
     char* url = "https://";
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
+    flog("on_user_close--------3");
     if (tmp != ci->reqQueue->reqHeader->pa){
+        flog("on_user_close--------4");
         strcat(url,ci->reqQueue->reqHeader->host);
     }
+    flog("on_user_close--------5");
     strcat(url,ci->reqQueue->reqHeader->pa);
     flog(url);
     //ERROR CODE
@@ -159,7 +163,6 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             break;
     }
     flog("on_user_close2");
-    int statuscode = 200;
     char * reqHead = (char *)malloc(strlen(ci->reqQueue->strHeader)+1);
     memset(reqHead,0,strlen(ci->reqQueue->strHeader)+1);
     base64_encode((const unsigned char *)ci->reqQueue->strHeader, reqHead, strlen(ci->reqQueue->strHeader));
@@ -180,7 +183,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             , ci->rspQueue->rsp_start_time
             , ci->rspQueue->rsp_end_time
             , (int)ci->_ssl
-            , statuscode
+            , ci->rspQueue->rspHeader->scode
             ,reqHead
             ,rspHead
             ,ci->reqQueue->_upsize

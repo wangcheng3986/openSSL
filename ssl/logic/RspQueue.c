@@ -44,7 +44,7 @@ static void getheader(ResponseQueue* rq){
     for (; i < cnt; i++)
     {
         flog(dst[i]);
-        s = strstr(dst[i], "Content-Length");
+        char *s = strstr(dst[i], "Content-Length");
         if(s != NULL){
             char list[3][80];
             int ll = split(list, dst[i], " ");
@@ -108,13 +108,13 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
-                if(rq->rspHeader!= NULL ){
-                    if(rq->rspHeader->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
-                        flog("http_end------------------");
-                        rq->_state = http_end;
-                    }
-
-                }
+//                if(rq->rspHeader!= NULL ){
+//                    if(rq->rspHeader->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
+//                        flog("http_end------------------");
+//                        rq->_state = http_end;
+//                    }
+//
+//                }
             }
                 break;
             case http_end:
