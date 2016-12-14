@@ -11,11 +11,11 @@ extern "C" {
 
 #include "entity.h"
 
-void handle_ssl_new(SSL_NEW* data);
-void handle_ssl_free(SSL_FREE* data);
-void handle_ssl_connect(SSL_CONNECT* data);
-void handle_ssl_read(SSL_READ* data);
-void handle_ssl_write(SSL_WRITE* data);
+void handle_ssl_new(SSL_NEW* data,long id);
+void handle_ssl_free(SSL_FREE* data,long id);
+void handle_ssl_connect(SSL_CONNECT* data,long id);
+void handle_ssl_read(SSL_READ* data,long id);
+void handle_ssl_write(SSL_WRITE* data,long id);
 
 #ifdef  __cplusplus
 }

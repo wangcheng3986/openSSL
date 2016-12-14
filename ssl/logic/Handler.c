@@ -8,15 +8,22 @@
 #include "entity.h"
 #include "log.h"
 
-void handle_ssl_new(SSL_NEW* data){
+void handle_ssl_new(SSL_NEW* data,long id){
+    char log[256];
+    sprintf(log, "------------------,%ld",id);
+    flog(log);
     flog("handle_ssl_new");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ret);
         ci->_ssl = data->_ret;
     }
+
     flog("handle_ssl_new1");
 }
-void handle_ssl_free(SSL_FREE* data){
+void handle_ssl_free(SSL_FREE* data,long id){
+    char log[256];
+    sprintf(log, "------------------,%ld",id);
+    flog(log);
     flog("handle_ssl_free");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
@@ -25,7 +32,10 @@ void handle_ssl_free(SSL_FREE* data){
     }
     flog("handle_ssl_free1");
 }
-void handle_ssl_connect(SSL_CONNECT* data){
+void handle_ssl_connect(SSL_CONNECT* data,long id){
+    char log[256];
+    sprintf(log, "------------------,%ld",id);
+    flog(log);
     flog("handle_ssl_connect");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
@@ -38,7 +48,10 @@ void handle_ssl_connect(SSL_CONNECT* data){
     }
     flog("handle_ssl_connect1");
 }
-void handle_ssl_read(SSL_READ* data){
+void handle_ssl_read(SSL_READ* data,long id){
+    char log[256];
+    sprintf(log, "------------------,%ld",id);
+    flog(log);
     flog("handle_ssl_read");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
@@ -52,7 +65,10 @@ void handle_ssl_read(SSL_READ* data){
     }
     flog("handle_ssl_read1");
 }
-void handle_ssl_write(SSL_WRITE* data){
+void handle_ssl_write(SSL_WRITE* data,long id){
+    char log[256];
+    sprintf(log, "------------------,%ld",id);
+    flog(log);
     flog("handle_ssl_write");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);

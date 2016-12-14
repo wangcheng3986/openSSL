@@ -13,27 +13,27 @@ long long nb_getSysTime(){
 	return getSysTime();
 }
 
-void * myprocess (void *arg, int mode)
+void * myprocess (void *arg, int mode,long id)
 {
 	switch (mode){
 		case 0:{
-			handle_ssl_new((SSL_NEW*)arg);
+			handle_ssl_new((SSL_NEW*)arg, id);
 		}
 			break;
 		case 1:{
-			handle_ssl_free((SSL_FREE*)arg);
+			handle_ssl_free((SSL_FREE*)arg, id);
 		}
 			break;
 		case 2:{
-			handle_ssl_connect((SSL_CONNECT*)arg);
+			handle_ssl_connect((SSL_CONNECT*)arg, id);
 		}
 			break;
 		case 3:{
-			handle_ssl_read((SSL_READ*)arg);
+			handle_ssl_read((SSL_READ*)arg, id);
 		}
 			break;
 		case 4:{
-			handle_ssl_write((SSL_WRITE*)arg);
+			handle_ssl_write((SSL_WRITE*)arg, id);
 		}
 			break;
 	}
