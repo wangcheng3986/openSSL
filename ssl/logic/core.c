@@ -139,6 +139,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
         strcat(url,ci->reqQueue->reqHeader->host);
     }
     strcat(url,ci->reqQueue->reqHeader->pa);
+    flog(url);
     //ERROR CODE
     const char *error_desc = "success";
     switch ( result_code )

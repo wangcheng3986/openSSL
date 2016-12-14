@@ -29,33 +29,34 @@ static void getheader(ResponseQueue* rq){
         rq->rspHeader = (RspHeader*)malloc(sizeof(RspHeader));
         memset(rq->rspHeader, 0, sizeof(RspHeader));
     }
-//    char dst[10][80];
-//    int cnt = split(dst, rq->strHeader, "\r\n");
-//    int i = 0;
-//    for (; i < cnt; i++)
-//    {
-//        flog(dst[i]);
-//        char *s = strstr(dst[i], "HTTP/1.1");
-//        if(s != NULL){
-//            char list[5][80];
-//            int ll = split(list, dst[i], " ");
-//            if(ll > 2){
-//                rq->rspHeader->scode = atoi(list[1]);
-//            }
-//        }else{
-//            s = strstr(dst[i], "Content-Length");
-//            if(s != NULL){
-//                char list[3][80];
-//                int ll = split(list, dst[i], " ");
-//                if(ll == 2){
-//                    rq->rspHeader->contentLength = atol(list[1]);
-//                }
-//            }
-//        }
-//    }
-//    char log[256];
-//    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->rspHeader->scode,rq->rspHeader->contentLength);
-//    flog(log);
+    char dst[10][80];
+    int cnt = split(dst, rq->strHeader, "\r\n");
+
+    char *s = strstr(dst[0], "HTTP/1.1");
+    if(s != NULL){
+        char list[5][80];
+        int ll = split(list, dst[0], " ");
+        if(ll > 2){
+            rq->rspHeader->scode = atoi(list[1]);
+        }
+    }
+    int i = 1;
+    for (; i < cnt; i++)
+    {
+        flog(dst[i]);
+        s = strstr(dst[i], "Content-Length");
+        if(s != NULL){
+            char list[3][80];
+            int ll = split(list, dst[i], " ");
+            if(ll == 2){
+                rq->rspHeader->contentLength = atol(list[1]);
+                break;
+            }
+        }
+    }
+    char log[80];
+    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->rspHeader->scode,rq->rspHeader->contentLength);
+    flog(log);
 }
 
 
@@ -107,10 +108,12 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
-                assert(rq->strHeader != NULL);
-                long left = len + rq->_downsize - strlen(rq->strHeader);
-                if(rq->rspHeader!= NULL && rq->rspHeader->contentLength >= left){
-                    flog("http_end------------------");
+                if(rq->rspHeader!= NULL ){
+                    if(rq->rspHeader->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
+                        flog("http_end------------------");
+                        rq->_state = http_end;
+                    }
+
                 }
             }
                 break;
