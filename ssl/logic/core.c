@@ -55,6 +55,7 @@ static void remove_conn(ConnectionInfo * ci){
         return;
     }
     if(_SSLConnectionList == ci){
+        flog("remove_conn---1-");
         _SSLConnectionList = NULL;
         destroy_req(ci->reqQueue);
         destroy_rsp(ci->rspQueue);
@@ -62,6 +63,7 @@ static void remove_conn(ConnectionInfo * ci){
         ci = NULL;
         return;
     }
+    flog("remove_conn---2-");
     ConnectionInfo* cur = _SSLConnectionList->next;
     ConnectionInfo* pre = _SSLConnectionList;
     while (cur){
@@ -134,7 +136,8 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     char* report = (char*)malloc(total);
     ///URL
     flog("on_user_close--------2");
-    char* url = "https://";
+    char url[80];
+    strcat(url,"https://");
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
     flog("on_user_close--------3");
     if (tmp != ci->reqQueue->reqHeader->pa){
