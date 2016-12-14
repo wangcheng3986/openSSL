@@ -100,7 +100,7 @@ static void on_down(ConnectionInfo* ci, const char *buf, int len){
     flog("on_down-1");
     if ( ci->rspQueue->strHeader != NULL && strlen(ci->rspQueue->strHeader) > 0 ) {
         char log[256];
-        sprintf(log, "--------on_down----_state--------%d", rq->_state);
+        sprintf(log, "--------on_down----_state--------%d", ci->rspQueue->_state);
         flog(log);
         switch ( ci->rspQueue->_state )
         {
@@ -171,7 +171,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
         * headers|response headers|send字节数|recv字节数|URL
         */
     flog("on_user_close3");
-    sprintf(report, "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%lld|%s"
+    sprintf(report, "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%ld|%s"
             , result_code
             , error_desc
             , ci->reqQueue->req_start_time
