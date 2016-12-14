@@ -106,7 +106,6 @@ typedef struct  _ConnectionInfo{
     int _connected;
     RequestQueue* reqQueue;
     ResponseQueue* rspQueue;
-    char* preProcess;
     struct _ConnectionInfo *next;
 }ConnectionInfo;
 

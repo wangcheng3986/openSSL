@@ -9,24 +9,24 @@
 #include "log.h"
 
 void handle_ssl_new(SSL_NEW* data){
+    flog("handle_ssl_new");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ret);
         ci->_ssl = data->_ret;
-        flog(ci->preProcess);
-        ci->preProcess = "handle_ssl_new";
     }
+    flog("handle_ssl_new1");
 }
 void handle_ssl_free(SSL_FREE* data){
+    flog("handle_ssl_free");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         on_connect_finished(ci,-1);
         on_user_close(ci,-1);
-        flog(ci->preProcess);
-        ci->preProcess = "handle_ssl_free";
     }
-
+    flog("handle_ssl_free1");
 }
 void handle_ssl_connect(SSL_CONNECT* data){
+    flog("handle_ssl_connect");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if ( ci->connect_start == 0 )
@@ -35,12 +35,11 @@ void handle_ssl_connect(SSL_CONNECT* data){
             ci->connect_end = data->_end_time;
             on_connect_finished(ci, 0);
         }
-        flog(ci->preProcess);
-        ci->preProcess = "handle_ssl_connect";
     }
-
+    flog("handle_ssl_connect1");
 }
 void handle_ssl_read(SSL_READ* data){
+    flog("handle_ssl_read");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if (ci->rspQueue->rsp_start_time == 0){
@@ -50,11 +49,11 @@ void handle_ssl_read(SSL_READ* data){
             ci->rspQueue->rsp_end_time = data->_end_time;
         }
         on_read_end(ci, (char*)data->_buf, data->_ret);
-        flog(ci->preProcess);
-        ci->preProcess = "handle_ssl_read";
     }
+    flog("handle_ssl_read1");
 }
 void handle_ssl_write(SSL_WRITE* data){
+    flog("handle_ssl_write");
     if(data != NULL){
         ConnectionInfo* ci = get(data->_ssl);
         if (ci->reqQueue->req_start_time == 0){
@@ -64,7 +63,6 @@ void handle_ssl_write(SSL_WRITE* data){
             ci->reqQueue->req_end_time = data->_end_time;
         }
         on_write_end(ci, (char*)data->_buf, data->_len, data->_ret);
-        flog(ci->preProcess);
-        ci->preProcess = "handle_ssl_write";
     }
+    flog("handle_ssl_write1");
 }

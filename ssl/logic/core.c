@@ -36,13 +36,8 @@ ConnectionInfo* get(void* ssl){
     ConnectionInfo* ci = (ConnectionInfo*)malloc(sizeof(ConnectionInfo));
     memset(ci,0, sizeof(ConnectionInfo));
     ci->_ssl = ssl;
-    ci->_connected= 0;
-    ci->_err_num=0;
-    ci->connect_end=0;
-    ci->connect_start=0;
     ci->reqQueue = create_req();
     ci->rspQueue = create_rsp();
-    ci->preProcess= "none";
     ci->next = NULL;
     if(_SSLConnectionList == NULL){
         _SSLConnectionList = ci;
