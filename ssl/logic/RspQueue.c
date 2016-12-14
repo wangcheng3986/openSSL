@@ -30,7 +30,7 @@ static void getheader(ResponseQueue* rq){
     while( result != NULL )
     {
         flog(result);
-        result = strtok(NULL, spl);
+        result = strtok(NULL, "\r\n");
     }
 
 //    char dst[10][80];
