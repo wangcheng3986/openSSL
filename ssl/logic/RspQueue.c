@@ -8,7 +8,7 @@
 #include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <assert.h>
 
 // 将str字符以spl分割,存于dst中，并返回子字符串数量
 static int split(char dst[][80], char* str, const char* spl)
@@ -105,10 +105,11 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
-                long left = len + rq->_downsize - strlen(rq->strHeader);
-                if(rq->rspHeader->contentLength == left){
-                    flog("http_end------------------");
-                }
+//                assert(rq->strHeader != NULL);
+//                long left = len + rq->_downsize - strlen(rq->strHeader);
+//                if(rq->rspHeader->contentLength == left){
+//                    flog("http_end------------------");
+//                }
             }
                 break;
             case http_end:
