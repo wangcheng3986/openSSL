@@ -133,8 +133,6 @@ void * thread_routine (void *arg)
             pthread_exit (NULL);
         }
 
-        flog ("thread 0x%x is starting to work\n", pthread_self ());
-
         /*assert是调试的好帮手*/
         assert (pool->cur_queue_size != 0);
         assert (pool->queue_head != NULL);
