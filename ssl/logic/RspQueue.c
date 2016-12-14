@@ -10,55 +10,52 @@
 #include <stdlib.h>
 #include <assert.h>
 
-// 将str字符以spl分割,存于dst中，并返回子字符串数量
-static int split(char dst[][80], char* str, const char* spl)
-{
-    int n = 0;
-    char *result = NULL;
-    result = strtok(str, spl);
-    while( result != NULL )
-    {
-        strcpy(dst[n++], result);
-        result = strtok(NULL, spl);
-    }
-    return n;
-}
-
 static void getheader(ResponseQueue* rq){
     char *result = NULL;
     result = strtok(rq->strHeader, "\r\n");
+    char* status = NULL;
+    char* length = NULL;
     while( result != NULL )
     {
-        flog(result);
+        if(strstr(result, "HTTP/1.1")){
+            status = result;
+        }else if(strstr(result, "Content-Length")){
+            length = result;
+        }
+        if(status && length){
+            break;
+        }
         result = strtok(NULL, "\r\n");
     }
 
-//    char dst[10][80];
-//    int cnt = split(dst, rq->strHeader, "\r\n");
+    if(status){
+        result = strtok(status, " ");
+        int index = 0;
+        while( result != NULL )
+        {
+            index++;
+            if(index == 2){
+                rq->scode = atoi(result);
+                break;
+            }
+            result = strtok(NULL, " ");
+        }
+    }
+    if(length){
+        result = strtok(length, " ");
+        int index = 0;
+        while( result != NULL )
+        {
+            index++;
+            if(index == 2){
+                rq->contentLength = atol(result);
+                break;
+            }
+            result = strtok(NULL, " ");
+        }
+    }
 
-//    char *s = strstr(dst[0], "HTTP/1.1");
-//    if(s != NULL){
-//        char list[5][80];
-//        int ll = split(list, dst[0], " ");
-//        if(ll > 2){
-//            rq->scode = atoi(list[1]);
-//        }
-//    }
-//    int i = 1;
-//    for (; i < cnt; i++)
-//    {
-//        flog(dst[i]);
-//        char *s = strstr(dst[i], "Content-Length");
-//        if(s != NULL){
-//            char list[3][80];
-//            int ll = split(list, dst[i], " ");
-//            if(ll == 2){
-//                rq->rspHeader->contentLength = atol(list[1]);
-//                break;
-//            }
-//        }
-//    }
-    char log[80];
+    char log[30];
     sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->scode,rq->contentLength);
     flog(log);
 }
@@ -102,20 +99,16 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
             case http_content:{
                 flog("push_rsp--http_content");
-//                if(rq->rspHeader!= NULL ){
-//                    if(rq->rspHeader->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
-//                        flog("http_end------------------");
-//                        rq->_state = http_end;
-//                    }
-//
-//                }
             }
                 break;
             case http_end:
                 break;
         }
         rq->_downsize += len;
-
+        if(rq->contentLength == (rq->_downsize - strlen(rq->strHeader)) ){
+            flog("http_end------------------");
+            rq->_state = http_end;
+        }
         char log[256];
         sprintf(log, "--------push_rsp------------%ld,%d",rq->_downsize,len);
         flog(log);
