@@ -44,7 +44,6 @@ ConnectionInfo* get(void* ssl){
     }else{
         tail->next = ci;
     }
-    flog("get new ConnectionInfo");
     return ci;
 }
 
@@ -53,7 +52,6 @@ static void remove_conn(ConnectionInfo * ci){
         return;
     }
     if(_SSLConnectionList == ci){
-        flog("remove_conn---1-");
         _SSLConnectionList = NULL;
         destroy_req(ci->reqQueue);
         destroy_rsp(ci->rspQueue);
@@ -61,7 +59,6 @@ static void remove_conn(ConnectionInfo * ci){
         ci = NULL;
         return;
     }
-    flog("remove_conn---2-");
     ConnectionInfo* cur = _SSLConnectionList->next;
     ConnectionInfo* pre = _SSLConnectionList;
     while (cur){
@@ -114,32 +111,22 @@ static void report(ConnectionInfo* ci){
 }
 
 void on_user_close(ConnectionInfo* ci, int result_code){
-    flog("on_user_close");
     if ( ci->reqQueue->strHeader == 0 ) return ;
     if ( ci->reqQueue->reqHeader == 0 ) return ;
     if ( ci->reqQueue->reqHeader->pa == 0 ) return ;
     if ( ci->reqQueue->reqHeader->host == 0 ) return ;
     if ( ci->rspQueue->strHeader == 0 ) return ;
-    flog("on_user_close--------1");
     int total = strlen(ci->reqQueue->strHeader) + strlen(ci->rspQueue->strHeader)+1024;
     char* report = (char*)malloc(total);
     ///URL
-    flog("on_user_close--------2");
     char url[80];
     memset(url,0,80);
     strcat(url,"https://");
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
-    flog(strcat);
-    flog("on_user_close--------3");
-    flog(ci->reqQueue->reqHeader->pa);
-    flog(ci->reqQueue->reqHeader->host);
     if (tmp != ci->reqQueue->reqHeader->pa){
-        flog("on_user_close--------4");
         strcat(url,ci->reqQueue->reqHeader->host);
     }
-    flog("on_user_close--------5");
     strcat(url,ci->reqQueue->reqHeader->pa);
-    flog(url);
     //ERROR CODE
     const char *error_desc = "success";
     switch ( result_code )
@@ -158,7 +145,6 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             error_desc = strerror(ci->_err_num);
             break;
     }
-    flog("on_user_close2");
     int len = 0;
     len = strlen(ci->reqQueue->strHeader)*2;
     char * reqHead = (char *)malloc(len);
@@ -173,7 +159,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
         * 结果|req开始时间,req结束时间,第一次收到response时间,最后一次收到response时间|socket id|状态码|request
         * headers|response headers|send字节数|recv字节数|URL
         */
-    flog("on_user_close3");
+
     sprintf(report, "REQ|%d:%s|%lld,%lld,%lld,%lld|%d|%d|%s|%s|%lld|%ld|%s"
             , result_code
             , error_desc
@@ -189,13 +175,13 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             ,ci->rspQueue->_downsize
             ,url
     );
+    free(rspHead);
+    free(reqHead);
     flog(report);
     remove_conn(ci);
-    flog("on_user_close--end");
 }
 
 void on_connect_finished(ConnectionInfo *conn_info, int err_code){
-    flog("----on_connect_finished----");
     if ( conn_info->_connected ) return;
     conn_info->_connected = 1;
     if ( conn_info->connect_start == 0 ) return;
