@@ -426,7 +426,7 @@ SSL *SSL_new(SSL_CTX *ctx, void *(*handlemessage) (char *))
     s->psk_client_callback = ctx->psk_client_callback;
     s->psk_server_callback = ctx->psk_server_callback;
 #endif
-    nb_ssl_create(ctx, s, startTime, nb_getSysTime());
+    nb_ssl_create(ctx, s, startTime, nb_getSysTime(),handlemessage);
     return (s);
  err:
     if (s != NULL)
