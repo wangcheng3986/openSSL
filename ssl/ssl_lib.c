@@ -2884,7 +2884,7 @@ SSL *SSL_dup(SSL *s)
     SSL *ret;
     int i;
 
-    if ((ret = SSL_new(SSL_get_SSL_CTX(s)),NULL) == NULL)
+    if ((ret = SSL_new(SSL_get_SSL_CTX(s),NULL)) == NULL)
         return (NULL);
 
     ret->version = s->version;
