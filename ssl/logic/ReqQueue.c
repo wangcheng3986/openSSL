@@ -29,13 +29,13 @@ static void getheader(RequestQueue* rq){
         memset(rq->reqHeader, 0, sizeof(ReqHeader));
     }
     char *result = NULL;
-    char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
-    memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
-    result = strtok(tmpHeader, "\r\n");
+    char* tmpHeader = (char*)malloc(strlen(rq->strHeader));
+    memcpy(tmpHeader,rq->strHeader,strlen(rq->strHeader));
 
     flog(rq->strHeader);
     flog(tmpHeader);
 
+    result = strtok(tmpHeader, "\r\n");
     char* protocol = NULL;
     char* host = NULL;
     while( result != NULL )

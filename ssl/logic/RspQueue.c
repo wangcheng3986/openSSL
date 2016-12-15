@@ -12,8 +12,8 @@
 
 static void getheader(ResponseQueue* rq){
     char *result = NULL;
-    char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
-    memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
+    char* tmpHeader = (char*)malloc(strlen(rq->strHeader));
+    memcpy(tmpHeader,rq->strHeader,strlen(rq->strHeader));
 
     flog(rq->strHeader);
     flog(tmpHeader);
