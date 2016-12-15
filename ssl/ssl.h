@@ -2287,10 +2287,7 @@ int SSL_check_private_key(const SSL *ctx);
 
 int SSL_CTX_set_session_id_context(SSL_CTX *ctx, const unsigned char *sid_ctx,
                                    unsigned int sid_ctx_len);
-
-typedef void (*HandleMessageFN)(const char *);
 SSL *SSL_new(SSL_CTX *ctx);
-void SSL_notify(SSL *ssl, HandleMessageFN func);
 int SSL_set_session_id_context(SSL *ssl, const unsigned char *sid_ctx,
                                unsigned int sid_ctx_len);
 
