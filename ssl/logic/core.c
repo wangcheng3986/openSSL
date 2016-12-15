@@ -180,8 +180,8 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             , ci->rspQueue->rsp_end_time
             , (int)ci->_ssl
             , ci->rspQueue->scode
-            ,ci->reqQueue->strHeader
-            ,ci->rspQueue->strHeader
+            ,reqHead
+            ,rspHead
             ,ci->reqQueue->_upsize
             ,ci->rspQueue->_downsize
             ,url
