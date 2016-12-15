@@ -12,7 +12,9 @@
 
 static void getheader(ResponseQueue* rq){
     char *result = NULL;
-    result = strtok(rq->strHeader, "\r\n");
+    char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
+    memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
+    result = strtok(tmpHeader, "\r\n");
     char* status = NULL;
     char* length = NULL;
     while( result != NULL )

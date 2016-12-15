@@ -28,43 +28,58 @@ static void getheader(RequestQueue* rq){
         rq->reqHeader = (ReqHeader*)malloc(sizeof(ReqHeader));
         memset(rq->reqHeader, 0, sizeof(ReqHeader));
     }
-    char dst[10][80];
-    int cnt = split(dst, rq->strHeader, "\r\n");
-    int i = 0;
-    for (; i < cnt; i++)
+    char *result = NULL;
+
+    char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
+    memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
+    result = strtok(tmpHeader, "\r\n");
+    char* protocol = NULL;
+    char* host = NULL;
+    while( result != NULL )
     {
-        char *s = strstr(dst[i], "GET");
-        if(s != NULL){
+        if(strstr(result, "GET")){
             rq->reqHeader->protocol = 0;
-            char list[3][80];
-            int ll = split(list, dst[i], " ");
-            if(ll == 3){
-                rq->reqHeader->pa = (char*)malloc(sizeof(char)* strlen(list[1]));
-                strcpy(rq->reqHeader->pa, list[1]);
-                flog(rq->reqHeader->pa);
-            }
-        }else{
-            s = strstr(dst[i], "POST");
-            if(s != NULL){
-                rq->reqHeader->protocol = 1;
-                char list[3][80];
-                int ll = split(list, dst[i], " ");
-                if(ll == 3){
-                    rq->reqHeader->pa = (char*)malloc(sizeof(char)* strlen(list[1]));
-                    strcpy(rq->reqHeader->pa, list[1]);
-                    flog(rq->reqHeader->pa);
-                }
-            }
+            protocol = result;
+        }else if(strstr(result, "POST")){
+            rq->reqHeader->protocol = 1;
+            protocol = result;
+        }else if(strstr(result, "Host")){
+            host = result;
         }
-        s = strstr(dst[i], "Host");
-        if(s != NULL){
-            char list[2][80];
-            int ll = split(list, dst[i], " ");
-            if(ll == 2){
-                rq->reqHeader->host = (char*)malloc(sizeof(char)* strlen(list[1]));
-                strcpy(rq->reqHeader->host, list[1]);
-                flog(rq->reqHeader->host);
+        if(host && protocol){
+            break;
+        }
+        result = strtok(NULL, "\r\n");
+    }
+
+    if(protocol){
+        result = strtok(protocol, " ");
+        int index = 0;
+        while( result != NULL )
+        {
+            index++;
+            if(index == 2){
+                rq->reqHeader->pa = (char*)malloc(sizeof(char)* strlen(result));
+                strcpy(rq->reqHeader->pa, result);
+                flog(rq->reqHeader->pa);
+                break;
             }
+            result = strtok(NULL, " ");
+        }
+    }
+    if(host){
+        result = strtok(host, " ");
+        int index = 0;
+        while( result != NULL )
+        {
+            index++;
+            if(index == 2){
+                rq->reqHeader->host = (char*)malloc(sizeof(char)* strlen(result);
+                strcpy(rq->reqHeader->host, result);
+                flog(rq->reqHeader->host);
+                break;
+            }
+            result = strtok(NULL, " ");
         }
     }
 }
