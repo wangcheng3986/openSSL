@@ -40,7 +40,7 @@ void * myprocess (void *arg, int mode,long id)
     return NULL;
 }
 
-void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time){
+void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time,void *(*handlemessage) (char *)){
 	SSL_NEW *obj = (SSL_NEW*)malloc(sizeof(SSL_NEW));
 	obj->_begin_time = start_time;
 	obj->_ctx= ctx;

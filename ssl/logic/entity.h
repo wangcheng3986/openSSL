@@ -27,6 +27,7 @@ typedef struct {
     void *_ret;
     int64 _begin_time;
     int64 _end_time;
+    void *(*handlemessage) (char *arg);
 }SSL_NEW;
 
 typedef struct {
@@ -103,6 +104,7 @@ typedef struct  _ConnectionInfo{
     int _connected;
     RequestQueue* reqQueue;
     ResponseQueue* rspQueue;
+    void *(*handlemessage) (char *arg);
     struct _ConnectionInfo *next;
 }ConnectionInfo;
 

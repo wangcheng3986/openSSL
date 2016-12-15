@@ -292,7 +292,7 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
     return (1);
 }
 #include <stdio.h>
-SSL *SSL_new(SSL_CTX *ctx)
+SSL *SSL_new(SSL_CTX *ctx, void *(*handlemessage) (char *))
 {
     SSL *s;
     int64 startTime = nb_getSysTime();
