@@ -294,8 +294,9 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
 #include <stdio.h>
 
 void SSL_notify(SSL *ssl, HandleMessageFN func){
-
+    nb_ssl_notify(ssl,func);
 }
+
 SSL *SSL_new(SSL_CTX *ctx)
 {
     SSL *s;

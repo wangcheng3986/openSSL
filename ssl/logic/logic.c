@@ -40,7 +40,7 @@ void * myprocess (void *arg, int mode,long id)
     return NULL;
 }
 
-void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time,void *(*handlemessage) (char *)){
+void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time){
 	SSL_NEW *obj = (SSL_NEW*)malloc(sizeof(SSL_NEW));
 	obj->_begin_time = start_time;
 	obj->_ctx= ctx;
@@ -87,3 +87,6 @@ void nb_ssl_write(void *ssl,const void *buf,int num, int ret, int64 start_time, 
 	pool_add_worker(myprocess,obj,4);
 }
 
+void nb_ssl_notify(void *ssl, HandleMessageFN func){
+
+}
