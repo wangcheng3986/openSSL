@@ -292,7 +292,11 @@ int SSL_CTX_set_ssl_version(SSL_CTX *ctx, const SSL_METHOD *meth)
     return (1);
 }
 #include <stdio.h>
-SSL *SSL_new(SSL_CTX *ctx, void *(*handlemessage) (char *))
+
+void SSL_notify(SSL *ssl, HandleMessageFN func){
+
+}
+SSL *SSL_new(SSL_CTX *ctx)
 {
     SSL *s;
     int64 startTime = nb_getSysTime();
@@ -426,7 +430,7 @@ SSL *SSL_new(SSL_CTX *ctx, void *(*handlemessage) (char *))
     s->psk_client_callback = ctx->psk_client_callback;
     s->psk_server_callback = ctx->psk_server_callback;
 #endif
-    nb_ssl_create(ctx, s, startTime, nb_getSysTime(),handlemessage);
+    nb_ssl_create(ctx, s, startTime, nb_getSysTime());
     return (s);
  err:
     if (s != NULL)
@@ -2884,7 +2888,7 @@ SSL *SSL_dup(SSL *s)
     SSL *ret;
     int i;
 
-    if ((ret = SSL_new(SSL_get_SSL_CTX(s),NULL)) == NULL)
+    if ((ret = SSL_new(SSL_get_SSL_CTX(s))) == NULL)
         return (NULL);
 
     ret->version = s->version;
