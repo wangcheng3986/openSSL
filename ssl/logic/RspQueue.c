@@ -82,14 +82,35 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
     if (rq->strHeader != NULL || buf == NULL){
         return;
     }
+    char *substr1 = "HTTP/1.1";
+    char *substr2 = "\r\n";
+    char *s1 = strstr(buf, substr1);
+    char *s2 = strstr(buf, substr2);
 
-    rq->strHeader = (char*)malloc(strlen(buf)+1);
-    memset(rq->strHeader,0, strlen(buf)+1);
-    strcpy(rq->strHeader, buf);
-    flog(rq->strHeader);
-    rq->_state = http_content;
-    getheader(rq);
-    flog(rq->strHeader);
+    if(s1 && s2){
+        char* tail = NULL;
+        while(s2){
+            tail = s2+4;
+            if(tail){
+                s2 = strstr(tail, substr2);
+            }else{
+                break;
+            }
+        }
+        int len = 0;
+        if(tail){
+            len = tail - buf - 4;
+        }else{
+            len = strlen(buf);
+        }
+
+        rq->strHeader = (char*)malloc(len);
+        memcpy(rq->strHeader,buf, len);
+        flog(rq->strHeader);
+        rq->_state = http_content;
+        getheader(rq);
+        flog(rq->strHeader);
+    }
 }
 
 void push_rsp(ResponseQueue* rq, const char *buf, int len){

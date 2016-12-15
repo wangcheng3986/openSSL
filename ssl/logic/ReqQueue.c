@@ -95,9 +95,24 @@ static void parse_head(RequestQueue* rq,const char *buf){
     char *s2 = strstr(buf, substr2);
 
     if(s1 && s2){
-        rq->strHeader = (char*)malloc(strlen(buf)+1);
-        memset(rq->strHeader,0, strlen(buf)+1);
-        strcpy(rq->strHeader, buf);
+        char* tail = NULL;
+        while(s2){
+            tail = s2+4;
+            if(tail){
+                s2 = strstr(tail, substr2);
+            }else{
+                break;
+            }
+        }
+        int len = 0;
+        if(tail){
+            len = tail - buf - 4;
+        }else{
+            len = strlen(buf);
+        }
+
+        rq->strHeader = (char*)malloc(len);
+        memcpy(rq->strHeader,buf, len);
         flog(rq->strHeader);
         rq->_state = http_content;
         getheader(rq);
