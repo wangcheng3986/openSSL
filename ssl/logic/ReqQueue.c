@@ -29,10 +29,13 @@ static void getheader(RequestQueue* rq){
         memset(rq->reqHeader, 0, sizeof(ReqHeader));
     }
     char *result = NULL;
-
     char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
     memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
     result = strtok(tmpHeader, "\r\n");
+
+    flog(rq->strHeader);
+    flog(tmpHeader);
+
     char* protocol = NULL;
     char* host = NULL;
     while( result != NULL )
@@ -113,10 +116,8 @@ static void parse_head(RequestQueue* rq,const char *buf){
 
         rq->strHeader = (char*)malloc(len);
         memcpy(rq->strHeader,buf, len);
-        flog(rq->strHeader);
         rq->_state = http_content;
         getheader(rq);
-        flog(rq->strHeader);
     }
 
     char log[256];

@@ -14,6 +14,10 @@ static void getheader(ResponseQueue* rq){
     char *result = NULL;
     char* tmpHeader = (char*)malloc(sizeof(rq->strHeader));
     memcpy(tmpHeader,rq->strHeader,sizeof(rq->strHeader));
+
+    flog(rq->strHeader);
+    flog(tmpHeader);
+
     result = strtok(tmpHeader, "\r\n");
     char* status = NULL;
     char* length = NULL;
@@ -106,10 +110,8 @@ static void parse_rsp_head(ResponseQueue* rq, const char *buf){
 
         rq->strHeader = (char*)malloc(len);
         memcpy(rq->strHeader,buf, len);
-        flog(rq->strHeader);
         rq->_state = http_content;
         getheader(rq);
-        flog(rq->strHeader);
     }
 }
 

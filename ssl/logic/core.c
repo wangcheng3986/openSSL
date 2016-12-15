@@ -116,6 +116,10 @@ static void report(ConnectionInfo* ci){
 void on_user_close(ConnectionInfo* ci, int result_code){
     flog("on_user_close");
     if ( ci->reqQueue->strHeader == 0 ) return ;
+    if ( ci->reqQueue->reqHeader == 0 ) return ;
+    if ( ci->reqQueue->reqHeader->pa == 0 ) return ;
+    if ( ci->reqQueue->reqHeader->host == 0 ) return ;
+    if ( ci->rspQueue->strHeader == 0 ) return ;
     flog("on_user_close--------1");
     int total = strlen(ci->reqQueue->strHeader) + strlen(ci->rspQueue->strHeader)+1024;
     char* report = (char*)malloc(total);
