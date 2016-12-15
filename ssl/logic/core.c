@@ -159,13 +159,13 @@ void on_user_close(ConnectionInfo* ci, int result_code){
             break;
     }
     flog("on_user_close2");
-//    char * reqHead = (char *)malloc(strlen(ci->reqQueue->strHeader)+1);
-//    memset(reqHead,0,strlen(ci->reqQueue->strHeader)+1);
-//    base64_encode((const unsigned char *)ci->reqQueue->strHeader, reqHead, strlen(ci->reqQueue->strHeader));
-//
-//    char * rspHead = (char *)malloc(strlen(ci->rspQueue->strHeader)+1);
-//    memset(rspHead,0,strlen(ci->rspQueue->strHeader)+1);
-//    base64_encode((const unsigned char *)ci->rspQueue->strHeader, rspHead, strlen(ci->rspQueue->strHeader));
+    char * reqHead = (char *)malloc(strlen(ci->reqQueue->strHeader)+1);
+    memset(reqHead,0,strlen(ci->reqQueue->strHeader)+1);
+    base64_encode((const unsigned char *)ci->reqQueue->strHeader, reqHead, strlen(ci->reqQueue->strHeader));
+
+    char * rspHead = (char *)malloc(strlen(ci->rspQueue->strHeader)+1);
+    memset(rspHead,0,strlen(ci->rspQueue->strHeader)+1);
+    base64_encode((const unsigned char *)ci->rspQueue->strHeader, rspHead, strlen(ci->rspQueue->strHeader));
     /**
         * 结果|req开始时间,req结束时间,第一次收到response时间,最后一次收到response时间|socket id|状态码|request
         * headers|response headers|send字节数|recv字节数|URL
