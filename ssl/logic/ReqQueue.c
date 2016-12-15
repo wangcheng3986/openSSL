@@ -74,7 +74,7 @@ static void getheader(RequestQueue* rq){
         {
             index++;
             if(index == 2){
-                rq->reqHeader->host = (char*)malloc(sizeof(char)* strlen(result);
+                rq->reqHeader->host = (char*)malloc(sizeof(char)* strlen(result));
                 strcpy(rq->reqHeader->host, result);
                 flog(rq->reqHeader->host);
                 break;
