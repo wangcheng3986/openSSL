@@ -26,7 +26,7 @@ extern "C" {
 typedef struct worker
 {
     /*回调函数，任务运行时会调用此函数，注意也可声明成其它形式*/
-    void *(*process) (void *arg, int mode, long id);
+    void *(*process) (void *arg, int mode);
     void *arg;/*回调函数的参数*/
     int mode;/*回调函数的参数*/
     struct worker *next;

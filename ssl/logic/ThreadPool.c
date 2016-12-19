@@ -144,7 +144,7 @@ void * thread_routine (void *arg)
         pthread_mutex_unlock (&(pool->queue_lock));
 
         /*调用回调函数，执行任务*/
-        (*(worker->process)) (worker->arg, worker->mode, (long)pthread_self ());
+        (*(worker->process)) (worker->arg, worker->mode);
         free (worker);
         worker = NULL;
     }
