@@ -15,8 +15,8 @@ static void getheader(ResponseQueue* rq){
     char* tmpHeader = (char*)malloc(strlen(rq->strHeader));
     memcpy(tmpHeader,rq->strHeader,strlen(rq->strHeader));
 
-    flog(rq->strHeader);
-    flog(tmpHeader);
+//    flog(rq->strHeader);
+//    flog(tmpHeader);
 
     result = strtok(tmpHeader, "\r\n");
     char* status = NULL;
@@ -61,9 +61,9 @@ static void getheader(ResponseQueue* rq){
         }
     }
 
-    char log[30];
-    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->scode,rq->contentLength);
-    flog(log);
+//    char log[30];
+//    sprintf(log, "--------getheader_rsp-----------%d,%ld", rq->scode,rq->contentLength);
+//    flog(log);
 }
 
 
@@ -124,7 +124,7 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 rq->left = rq->contentLength;
                 break;
             case http_content:{
-                flog("push_rsp--http_content");
+//                flog("push_rsp--http_content");
                 if(rq->left > 0){
                     rq->left -= len;
                     if(rq->left <= 0 ){
@@ -137,9 +137,9 @@ void push_rsp(ResponseQueue* rq, const char *buf, int len){
                 break;
         }
         rq->_downsize += len;
-
-        char log[256];
-        sprintf(log, "--------push_rsp------------%ld,%ld,%d",rq->contentLength,rq->_downsize,rq->left);
-        flog(log);
+//
+//        char log[256];
+//        sprintf(log, "--------push_rsp------------%ld,%ld,%d",rq->contentLength,rq->_downsize,rq->left);
+//        flog(log);
     }
 }

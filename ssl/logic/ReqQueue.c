@@ -32,8 +32,8 @@ static void getheader(RequestQueue* rq){
     char* tmpHeader = (char*)malloc(strlen(rq->strHeader));
     memcpy(tmpHeader,rq->strHeader,strlen(rq->strHeader));
 
-    flog(rq->strHeader);
-    flog(tmpHeader);
+//    flog(rq->strHeader);
+//    flog(tmpHeader);
 
     result = strtok(tmpHeader, "\r\n");
     char* protocol = NULL;
@@ -64,7 +64,7 @@ static void getheader(RequestQueue* rq){
             if(index == 2){
                 rq->reqHeader->pa = (char*)malloc(sizeof(char)* strlen(result));
                 strcpy(rq->reqHeader->pa, result);
-                flog(rq->reqHeader->pa);
+//                flog(rq->reqHeader->pa);
                 break;
             }
             result = strtok(NULL, " ");
@@ -79,7 +79,7 @@ static void getheader(RequestQueue* rq){
             if(index == 2){
                 rq->reqHeader->host = (char*)malloc(sizeof(char)* strlen(result));
                 strcpy(rq->reqHeader->host, result);
-                flog(rq->reqHeader->host);
+//                flog(rq->reqHeader->host);
                 break;
             }
             result = strtok(NULL, " ");
@@ -120,9 +120,9 @@ static void parse_head(RequestQueue* rq,const char *buf){
         getheader(rq);
     }
 
-    char log[256];
-    sprintf(log, "--------parse_REQ_head----_state--------%d", rq->_state);
-    flog(log);
+//    char log[256];
+//    sprintf(log, "--------parse_REQ_head----_state--------%d", rq->_state);
+//    flog(log);
 }
 
 
@@ -159,14 +159,14 @@ void push_req(RequestQueue* rq, const char *buf, int len){
     switch ( rq->_state )
     {
         case http_head:{
-            flog("push_req:Protocol_head");
+//            flog("push_req:Protocol_head");
             parse_head(rq, buf);
             break;
         }
         case http_content:
         case http_end:
         default:
-            flog("push_req:default");
+//            flog("push_req:default");
             break;
     }
     rq->_upsize += len;

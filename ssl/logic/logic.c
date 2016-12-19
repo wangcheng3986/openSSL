@@ -1,10 +1,10 @@
 #include "../logic.h"
-#include "log.h"
 #include "ThreadPool.h"
 
 #include <stdio.h>
 #include "Handler.h"
 #include "gettime.h"
+#include "entity.h"
 #include <stdlib.h>
 #include <malloc.h>
 
@@ -88,5 +88,8 @@ void nb_ssl_write(void *ssl,const void *buf,int num, int ret, int64 start_time, 
 }
 
 void nb_ssl_notify(void *ssl, HandleMessageFN func){
-
+	SSL_NOTIFY *obj = (SSL_NOTIFY*)malloc(sizeof(SSL_NOTIFY));
+	obj->_ssl= ssl;
+	obj->_notify = func;
+	pool_add_worker(myprocess,obj,5);
 }

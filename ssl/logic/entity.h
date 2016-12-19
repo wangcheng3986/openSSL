@@ -15,12 +15,9 @@ extern "C" {
 #ifndef int64
 #define int64 long long
 #endif
-typedef unsigned char byte_t;
-typedef unsigned short word_t;
-typedef unsigned int dword_t;
-typedef unsigned long long qword_t;
-#define node_size 1024
+
 #define Min(a,b) a<b?a:b
+typedef void (*HandleMessageFN)(const char *);
 
 typedef struct {
     void *_ctx;
@@ -51,8 +48,6 @@ typedef struct {
     void *_buf;
 }SSL_READ;
 
-
-
 typedef struct {
     void * _ssl;
     int _ret;
@@ -61,6 +56,11 @@ typedef struct {
     int64 _end_time;
     void *_buf;
 }SSL_WRITE;
+
+typedef struct {
+    void * _ssl;
+    HandleMessageFN _notify;
+}SSL_NOTIFY;
 
 typedef enum _HttpState {
     http_head = 0,
@@ -104,7 +104,7 @@ typedef struct  _ConnectionInfo{
     int _connected;
     RequestQueue* reqQueue;
     ResponseQueue* rspQueue;
-    void *(*handlemessage) (char *arg);
+    HandleMessageFN _callbackFunc;
     struct _ConnectionInfo *next;
 }ConnectionInfo;
 

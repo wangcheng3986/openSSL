@@ -7,7 +7,7 @@ extern "C" {
 
 #include "./logic/entity.h"
 
-typedef void (*HandleMessageFN)(const char *);
+
 
 long long nb_getSysTime();
 void nb_ssl_create(void *ctx, void *ret, int64 start_time, int64 end_time);
