@@ -31,7 +31,8 @@ LIBSRC=	\
 	ssl_ciph.c ssl_stat.c ssl_rsa.c \
 	ssl_asn1.c ssl_txt.c ssl_algs.c ssl_conf.c \
 	bio_ssl.c ssl_err.c kssl.c t1_reneg.c tls_srp.c t1_trce.c ssl_utst.c \
-	logic/logic.c logic/log.c logic/ThreadPool.c logic/core.c logic/Handler.c 
+	logic/logic.c logic/log.c logic/ThreadPool.c logic/core.c logic/Handler.c \
+	logic/ReqQueue.c logic/RspQueue.c logic/gettime.c logic/base64_encode.c
 LIBOBJ= \
 	s2_meth.o  s2_srvr.o  s2_clnt.o  s2_lib.o  s2_enc.o s2_pkt.o \
 	s3_meth.o  s3_srvr.o  s3_clnt.o  s3_lib.o  s3_enc.o s3_pkt.o s3_both.o s3_cbc.o \
@@ -43,7 +44,8 @@ LIBOBJ= \
 	ssl_ciph.o ssl_stat.o ssl_rsa.o \
 	ssl_asn1.o ssl_txt.o ssl_algs.o ssl_conf.o \
 	bio_ssl.o ssl_err.o kssl.o t1_reneg.o tls_srp.o t1_trce.o ssl_utst.o \
-	logic/logic.o logic/log.o logic/ThreadPool.o logic/core.o logic/Handler.o 
+	logic/logic.o logic/log.o logic/ThreadPool.o logic/core.o logic/Handler.o \
+        logic/ReqQueue.o logic/RspQueue.o logic/gettime.o logic/base64_encode.o
 
 SRC= $(LIBSRC)
 
@@ -110,7 +112,12 @@ clean:
 
 Handler.o: Handler.c logic/Handler.c logic/Handler.h logic/core.h
 Handler.o: logic/entity.h logic/log.h
-ThreadPool.o: ThreadPool.c logic/ThreadPool.c logic/ThreadPool.h
+ReqQueue.o: ReqQueue.c logic/ReqQueue.c logic/ReqQueue.h logic/entity.h
+ReqQueue.o: logic/log.h
+RspQueue.o: RspQueue.c logic/RspQueue.c logic/RspQueue.h logic/entity.h
+RspQueue.o: logic/log.h
+ThreadPool.o: ThreadPool.c logic/ThreadPool.c logic/ThreadPool.h logic/log.h
+base64_encode.o: base64_encode.c logic/base64_encode.c logic/base64_encode.h
 bio_ssl.o: ../include/openssl/asn1.h ../include/openssl/bio.h
 bio_ssl.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 bio_ssl.o: ../include/openssl/crypto.h ../include/openssl/dtls1.h
@@ -129,7 +136,8 @@ bio_ssl.o: ../include/openssl/ssl2.h ../include/openssl/ssl23.h
 bio_ssl.o: ../include/openssl/ssl3.h ../include/openssl/stack.h
 bio_ssl.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 bio_ssl.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h bio_ssl.c
-core.o: core.c logic/core.c logic/core.h logic/entity.h logic/log.h
+core.o: core.c logic/ReqQueue.h logic/RspQueue.h logic/base64_encode.h
+core.o: logic/core.c logic/core.h logic/entity.h logic/log.h
 d1_both.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 d1_both.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 d1_both.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
@@ -274,6 +282,7 @@ d1_srvr.o: ../include/openssl/ssl3.h ../include/openssl/stack.h
 d1_srvr.o: ../include/openssl/symhacks.h ../include/openssl/tls1.h
 d1_srvr.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h d1_srvr.c
 d1_srvr.o: ssl_locl.h
+gettime.o: gettime.c logic/entity.h logic/gettime.c logic/gettime.h logic/log.h
 kssl.o: ../include/openssl/asn1.h ../include/openssl/bio.h
 kssl.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 kssl.o: ../include/openssl/crypto.h ../include/openssl/dtls1.h
@@ -295,7 +304,7 @@ kssl.o: ../include/openssl/x509.h ../include/openssl/x509_vfy.h kssl.c
 kssl.o: kssl_lcl.h
 log.o: log.c logic/log.c logic/log.h
 logic.o: logic.c logic/.././logic/entity.h logic/../logic.h logic/Handler.h
-logic.o: logic/ThreadPool.h logic/entity.h logic/log.h logic/logic.c
+logic.o: logic/ThreadPool.h logic/entity.h logic/gettime.h logic/logic.c
 s23_clnt.o: ../e_os.h ../include/openssl/asn1.h ../include/openssl/bio.h
 s23_clnt.o: ../include/openssl/buffer.h ../include/openssl/comp.h
 s23_clnt.o: ../include/openssl/crypto.h ../include/openssl/dsa.h
