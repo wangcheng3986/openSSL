@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 void flog(const char* buffer);
-
+void fresult(const char* buffer);
 
 #ifdef  __cplusplus
 }

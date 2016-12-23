@@ -60,7 +60,7 @@ static long get_file_size(char* filename)
 @param buf_size [in]: 日志内容大小
 @return 空
 */
-static void write_log_file(char* filename,long max_size, const char* buffer)
+static void write_log_file(char* filename,long max_size, const char* buffer , const char* strTime)
 {
     if (filename != NULL && buffer != NULL)
     {
@@ -75,11 +75,9 @@ static void write_log_file(char* filename,long max_size, const char* buffer)
             FILE *fp = fopen(filename, "a+");
             if (fp != NULL)
             {
-                char now[32];
-                memset(now, 0, sizeof(now));
-                get_local_time(now);
-		
-                fwrite(now, 1,strlen(now), fp);              
+                if(strTime != 0){
+                    fwrite(now, 1,strlen(now), fp);
+                }
 		        fwrite(buffer,1,strlen(buffer),fp);
 		        fwrite("\r\n",1,strlen("\r\n"),fp);
 
@@ -93,5 +91,12 @@ static void write_log_file(char* filename,long max_size, const char* buffer)
     }
 }
 void flog(const char* buffer){
-    write_log_file("/sdcard/NBS/FFMPEG.txt",FILE_MAX_SIZE, buffer);
+    char now[32];
+    memset(now, 0, sizeof(now));
+    get_local_time(now);
+    write_log_file("/sdcard/NBS/FFMPEG.txt",FILE_MAX_SIZE, buffer, now);
+}
+
+void fresult(const char* buffer){
+    write_log_file("/sdcard/NBS/result.txt",FILE_MAX_SIZE, buffer, 0);
 }

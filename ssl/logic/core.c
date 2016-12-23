@@ -122,8 +122,9 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     char url[80];
     memset(url,0,80);
     strcat(url,"https://");
+
     char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
-    if (tmp != ci->reqQueue->reqHeader->pa){
+    if (tmp - ci->reqQueue->reqHeader->pa > 8){
         strcat(url,ci->reqQueue->reqHeader->host);
     }
     strcat(url,ci->reqQueue->reqHeader->pa);
