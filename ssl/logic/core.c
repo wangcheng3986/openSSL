@@ -123,6 +123,7 @@ static char* strJoin(const char *s1, const char *s2)
 }
 
 void on_user_close(ConnectionInfo* ci, int result_code){
+    flog("on_user_close");
     if ( ci->reqQueue->strHeader == 0 ) return ;
     if ( ci->reqQueue->reqHeader == 0 ) return ;
     if ( ci->reqQueue->reqHeader->pa == 0 ) return ;
@@ -208,6 +209,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     if(ci->_callbackFunc){
         ci->_callbackFunc(report);
     }
+    flog("on_user_close end");
 }
 
 void on_connect_finished(ConnectionInfo *conn_info, int err_code){
