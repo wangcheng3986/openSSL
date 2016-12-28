@@ -76,7 +76,7 @@ static void write_log_file(char* filename,long max_size, const char* buffer , co
             if (fp != NULL)
             {
                 if(strTime != 0){
-                    fwrite(now, 1,strlen(now), fp);
+                    fwrite(strTime, 1,strlen(strTime), fp);
                 }
 		        fwrite(buffer,1,strlen(buffer),fp);
 		        fwrite("\r\n",1,strlen("\r\n"),fp);
