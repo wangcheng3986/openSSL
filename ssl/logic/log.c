@@ -91,6 +91,9 @@ static void write_log_file(char* filename,long max_size, const char* buffer , co
     }
 }
 void flog(const char* buffer){
+    if(buffer == NULL){
+        return;
+    }
     char now[32];
     memset(now, 0, sizeof(now));
     get_local_time(now);
@@ -98,5 +101,8 @@ void flog(const char* buffer){
 }
 
 void fresult(const char* buffer){
+    if(buffer == NULL){
+        return;
+    }
     write_log_file("/sdcard/NBS/result.txt",FILE_MAX_SIZE, buffer, 0);
 }

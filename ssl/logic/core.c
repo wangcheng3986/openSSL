@@ -110,6 +110,18 @@ static void report(ConnectionInfo* ci){
     on_user_close(ci,0);
 }
 
+static char* strJoin(const char *s1, const char *s2)
+{
+    char *result = (char*)malloc(strlen(s1)+strlen(s2)+1);//+1 for the zero-terminator3
+    //in real code you would check for errors in malloc here
+    if (result == NULL) return NULL;
+
+    strcpy(result, s1);
+    strcat(result, s2);
+
+    return result;
+}
+
 void on_user_close(ConnectionInfo* ci, int result_code){
     if ( ci->reqQueue->strHeader == 0 ) return ;
     if ( ci->reqQueue->reqHeader == 0 ) return ;
@@ -122,12 +134,24 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     char url[80];
     memset(url,0,80);
     strcat(url,"https://");
-
-    char* tmp = strstr(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host);
-    if (tmp - ci->reqQueue->reqHeader->pa > 8){
-        strcat(url,ci->reqQueue->reqHeader->host);
+    //处理uri中带http 或者https的特殊情况
+    const char *strHost2 = strJoin("https://",ci->reqQueue->reqHeader->host);
+    int result = strncmp(ci->reqQueue->reqHeader->pa, ci->reqQueue->reqHeader->host, strlen(ci->reqQueue->reqHeader->host));
+    //URI以host开头
+    if ( result == 0) {
+        strcat(url,ci->reqQueue->reqHeader->pa);
+    }else{
+        //URI以http+host开头
+        result = strncmp(ci->reqQueue->reqHeader->pa, strHost2, strlen(strHost2));
+        if ( result == 0) {
+            memset(url,0,80);
+            strcat(url,ci->reqQueue->reqHeader->pa);
+        }else{//其他情况
+            strcat(url,ci->reqQueue->reqHeader->host);
+            strcat(url,ci->reqQueue->reqHeader->pa);
+        }
     }
-    strcat(url,ci->reqQueue->reqHeader->pa);
+
     //ERROR CODE
     const char *error_desc = "success";
     switch ( result_code )
