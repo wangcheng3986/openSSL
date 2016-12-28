@@ -180,7 +180,7 @@ void on_user_close(ConnectionInfo* ci, int result_code){
     free(reqHead);
     remove_conn(ci);
 
-    flog(report);
+    fresult(report);
     if(ci->_callbackFunc){
         ci->_callbackFunc(report);
     }
@@ -201,7 +201,7 @@ void on_connect_finished(ConnectionInfo *conn_info, int err_code){
                 , conn_info->connect_start
                 , conn_info->connect_end
                 , (int)conn_info->_ssl);
-        flog(buf);
+        fresult(buf);
         if(conn_info->_callbackFunc){
             conn_info->_callbackFunc(buf);
         }
